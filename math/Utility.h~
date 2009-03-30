@@ -1,5 +1,7 @@
 #include <math.h>
 #include "Vector3.h"
+#ifndef SPHERE
+#include "../objects/Sphere.h"
 
 #define PI = 2*acos(0)
 

@@ -9,24 +9,26 @@
  */
 class Sphere
 {
-private:
-    //Position and direction
-    Vector3 pos, dir;
-    //Velocity, mass and radius
-    GLfloat vel, mass, r;
-    //Sphere materials
-    GLfloat amb[4], spec[4], diff[4];
+ private:
+  //Position and direction
+  Vector3 pos, dir,vel;
+  //Velocity, mass and radius
+  GLfloat  mass, r, rapidez;
+  //Sphere materials
+  GLfloat amb[4], spec[4], diff[4];
 
-public:
-    Sphere(void);
-    Sphere(GLfloat r, Vector3 pos);
+ public:
+  Sphere(void);
+  Sphere(GLfloat r, Vector3 pos);
 
-    Vector3 getPos(void);
-    Vector3 getDir(void);
-    GLfloat getVel(void);
-    GLfloat getMass(void);
-    GLfloat getR(void);
+  Vector3 getPos(void);
+  Vector3 getDir(void);
+  Vector3 getVel(void);
+  void setVel(Vector3);
+  GLfloat getRap(void);
+  GLfloat getMass(void);
+  GLfloat getR(void);
 
-    void draw(void);
+  void draw(void);
 };
 #endif

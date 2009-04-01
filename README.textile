@@ -33,10 +33,16 @@ h2. Existing Git Repo?
 h1. Para usar el Git
 
 git init
+
 git pull
+
   Cambios a los archivos
+
+
 git add .
+
 git commit -m 'Mensaje'
+
 git push
 
 

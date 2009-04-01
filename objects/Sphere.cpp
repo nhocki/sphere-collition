@@ -16,6 +16,18 @@ Sphere::Sphere(GLfloat r, Vector3 pos, Vector3 vel)
     Sphere::pos = pos;
     Sphere::vel = vel;
     mass = 1.0f;
+
+    //Ambient
+    amb[0] = 0.0f;
+    amb[1] = 0.0f;
+    amb[2] = 0.5f;
+    amb[3] = 1.0f;
+
+    //Specular
+    spec[0] = 0.0f;
+    spec[1] = 0.0f;
+    spec[2] = 1.0f;
+    spec[3] = 1.0f;
 }
 
 /* moVes the sphere

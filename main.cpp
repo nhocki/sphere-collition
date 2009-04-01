@@ -30,10 +30,10 @@ Camera camera(Vector3(0.0,0.0,5.0), PI/2, -PI/2, 5.0);
 float delta = 0.005;
 
 //Light Varaibles
-GLfloat LA1[]= {0.4f, 0.4f, 0.4f, 1.0f };
-GLfloat LD1[]= {0.8f, 0.8f, 0.8f, 1.0f };
+GLfloat LA1[]= {0.3f, 0.3f, 0.3f, 1.0f };
+GLfloat LD1[]= {0.6f, 0.6f, 0.6f, 1.0f };
 GLfloat LS1[]= {1.0f, 1.0f, 1.0f, 1.0f };
-GLfloat LP1[]= {7.0f, 5.0f, 7.0f, 1.0f };
+GLfloat LP1[]= {5.0f, 5.0f, 5.0f, 0.1f };
 
 //FPS calculation variables
 GLint currTime, lastTime, fps;
@@ -158,14 +158,6 @@ void update()
         for(int j = i+1; j < spheres.size(); ++j)
             if(areColliding(spheres[i], spheres[j]))
                 collision(spheres[i], spheres[j]);
-    /*//Check if they are colliding REAL METHOD; BUT IS NOT WORKING RIGHT NOW
-    if(areColliding(sp1, sp2))
-    {
-        //collision(sp1,sp2);
-        Vector3 disp = (sp1.getPos() - sp2.getPos()).normalize();
-        sp1.setVel(sp1.getVel() - (disp * sp1.getVel().dot(disp) * 2));
-        sp2.setVel(sp2.getVel() - (disp * sp2.getVel().dot(disp) * 2));
-        }*/
 
    //Checks if the balls collide with the walls
     for(int i = 0; i < spheres.size(); ++i)
@@ -215,10 +207,12 @@ void init()
     spheres.push_back(Sphere(1.0f, Vector3(5.0f, 0.0f, -5.0f), Vector3(0.002f, 0.0f, 0.002f)));
 
     //Add some walls
-    walls.push_back(Wall(Vector3(10.0f, 0.0f, -10.0f), Vector3(10.0f, 5.0f, 10.0f), -1.0f, 0.0f, 0.0f, 10.0f, true));
-    walls.push_back(Wall(Vector3(-10.0f, 0.0f, -10.0f), Vector3(-10.0f, 5.0f, 10.0f), 1.0f, 0.0f, 0.0f, 10.0f, true));
-    walls.push_back(Wall(Vector3(-10.0f, 0.0f, -10.0f), Vector3(10.0f, 5.0f, -10.0f), 0.0f, 0.0f, 1.0f, 10.0f, true));
-    walls.push_back(Wall(Vector3(10.0f, 0.0f, 10.0f), Vector3(-10.0f, 5.0f, 10.0f), 0.0f, 0.0f, -1.0f, 10.0f, true));
+    walls.push_back(Wall(Vector3(10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), -1.0f, 0.0f, 0.0f, 10.0f, true));
+    walls.push_back(Wall(Vector3(-10.0f, 0.0f, 10.0f), Vector3(-10.0f, 20.0f, -10.0f), 1.0f, 0.0f, 0.0f, 10.0f, true));
+    walls.push_back(Wall(Vector3(-10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, -10.0f), 0.0f, 0.0f, 1.0f, 10.0f, true));
+    walls.push_back(Wall(Vector3(10.0f, 0.0f, 10.0f), Vector3(-10.0f, 20.0f, 10.0f), 0.0f, 0.0f, -1.0f, 10.0f, true));
+    
+    //walls.psuh_back(Wall())
 }
 
 /*

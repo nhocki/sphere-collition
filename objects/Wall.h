@@ -14,7 +14,7 @@ private:
     Vector3 min, max;
     Vector3 points[24];
     //Wall materials
-    GLfloat amb[4], spec[4], diff[4];
+    GLfloat amb[4], spec[4];
     //Plane Ecuation
     GLfloat a,b,c,d;
     //Tells if the wall should be draw solid, or as a wireframe
@@ -35,6 +35,5 @@ public:
     void setText(GLuint);
 
     void draw(void);
-    void drawWire();
 };
 #endif

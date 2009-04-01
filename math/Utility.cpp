@@ -53,7 +53,7 @@ bool sphereWallColliding(Sphere a, Wall b)
  */
 void wallCollision(Sphere &s, Wall &w)
 {
-    Vector3 norm(w.getA(), w.getB(), w.getC()); 
+    Vector3 norm(w.getA(), w.getB(), w.getC());
     s.setVel(s.getVel() - ((-norm)*s.getVel().dot(-norm))*2);
 }
 

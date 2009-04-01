@@ -9,7 +9,7 @@
 #include <sstream>
 
 //A super arbitrary aproximation of gravity
-const GLfloat GRAVITY = 0.00001;
+const GLfloat GRAVITY = 0.0098;
 
 using namespace std;
 
@@ -30,7 +30,8 @@ vector<Wall> walls;
 //Camera
 Camera camera(Vector3(0.0,0.0,5.0), PI/2, -PI/2, 5.0);
 //Speed Variables
-float delta = 0.005;
+GLfloat delta = 0.005f;
+GLfloat deltaBall = 0.001f;
 
 //Light Varaibles
 GLfloat LA1[]= {0.3f, 0.3f, 0.3f, 1.0f };
@@ -145,7 +146,7 @@ void update()
 
     //Update the spheres positions, and then checks if they collide
     for(int i = 0; i < spheres.size(); ++i)
-        spheres[i].move(1.0f, GRAVITY);
+        spheres[i].move(deltaBall, GRAVITY);
 
     //Check if any sphere is colliding
     /* Provisional method, doesn't take the mass into account
@@ -206,9 +207,11 @@ void resize(int w, int h)
 void init()
 {
     //Add some spheres
-    spheres.push_back(Sphere(1.0f, Vector3(1.0f, 8.0f, 5.0f), Vector3(0.0f, 0.0f, -0.004f)));
-    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 8.0f, -5.0f), Vector3(0.0f, 0.0f, 0.004f)));
-    spheres.push_back(Sphere(1.0f, Vector3(5.0f, 8.0f, -5.0f), Vector3(0.002f, 0.0f, 0.002f)));
+    spheres.push_back(Sphere(1.0f, Vector3(1.0f, 8.0f, 5.0f), Vector3(0.0f, 0.0f, -4.0f)));
+    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 8.0f, -5.0f), Vector3(0.0f, 0.0f, 4.0f)));
+    spheres.push_back(Sphere(1.0f, Vector3(5.0f, 8.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f)));
+    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 15.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f)));
+     spheres.push_back(Sphere(1.0f, Vector3(5.0f, 15.0f, 0.0f), Vector3(1.0f, 1.0f, 2.0f)));
 
     //Add some walls
     walls.push_back(Wall(Vector3(10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), -1.0f, 0.0f, 0.0f, 10.0f, true));
@@ -216,7 +219,9 @@ void init()
     walls.push_back(Wall(Vector3(-10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, -10.0f), 0.0f, 0.0f, 1.0f, 10.0f, true));
     walls.push_back(Wall(Vector3(10.0f, 0.0f, 10.0f), Vector3(-10.0f, 20.0f, 10.0f), 0.0f, 0.0f, -1.0f, 10.0f, true));
     
+    //Ceiling and floor
     walls.push_back(Wall(Vector3(-10.0f, 0.0f, 10.0f), Vector3(10.0f, 0.0f, -10.0f), 0.0f, 1.0f, 0.0f, 0.0f, true));
+    walls.push_back(Wall(Vector3(-10.0f, 20.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), 0.0f, -1.0f, 0.0f, 20.0f, true));
 }
 
 /*

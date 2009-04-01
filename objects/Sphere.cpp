@@ -20,17 +20,17 @@ Sphere::Sphere(GLfloat r, Vector3 pos, Vector3 vel)
     //Ambient
     amb[0] = 0.0f;
     amb[1] = 0.0f;
-    amb[2] = 0.5f;
+    amb[2] = 0.7f;
     amb[3] = 1.0f;
 
     //Specular
-    spec[0] = 0.0f;
-    spec[1] = 0.0f;
+    spec[0] = 0.4f;
+    spec[1] = 0.4f;
     spec[2] = 1.0f;
     spec[3] = 1.0f;
 
     //Shinness
-    shin[0] = 4.0f;
+    shin[0] = 1.0f;
 }
 
 /* moVes the sphere

@@ -26,6 +26,7 @@ class Sphere
   Vector3 getVel(void);
 
   void setVel(Vector3);
+  void setRap(GLfloat);
 
   GLfloat getMass(void);
   GLfloat getRap(void);

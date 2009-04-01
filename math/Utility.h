@@ -4,7 +4,7 @@
 #include "Vector3.h"
 #include "../objects/Sphere.h"
 
-#define PI 3.141592653589793115997963468544185161590576171875
+#define PI 2*acos(0)
 
 float distance(Vector3 v1, Vector3 v2);
 float distanceSquared(Vector3 v1, Vector3 v2);

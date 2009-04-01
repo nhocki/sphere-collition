@@ -5,8 +5,8 @@
 float distPoints(Vector3 v1, Vector3 v2)
 {
   return sqrt((v1[0] - v2[0])*(v1[0] - v2[0]) +
-	      (v1[1] - v2[1])*(v1[1] - v2[1]) +
-	      (v1[2] - v2[2])*(v1[2] - v2[2]));
+              (v1[1] - v2[1])*(v1[1] - v2[1]) +
+              (v1[2] - v2[2])*(v1[2] - v2[2]));
 }
 
 /* Calculates the distance squared, to save one sqrt function
@@ -14,8 +14,8 @@ float distPoints(Vector3 v1, Vector3 v2)
 float distPointsSquared(Vector3 v1, Vector3 v2)
 {
   return (v1[0] - v2[0])*(v1[0] - v2[0]) +
-    (v1[1] - v2[1])*(v1[1] - v2[1]) +
-    (v1[2] - v2[2])*(v1[2] - v2[2]);
+         (v1[1] - v2[1])*(v1[1] - v2[1]) +
+         (v1[2] - v2[2])*(v1[2] - v2[2]);
 }
 
 /* Calculates the distance from a plane to a point
@@ -28,9 +28,23 @@ float distPointPlane(float a, float b, float c, float d, Vector3 v)
   return (a*v[0] + b*v[1] + c*v[2] + d)/sqrt(a*a + b*b + c*c);
 }
 
+/* Checks if two spheres are colliding
+ */
+bool areColliding(Sphere a, Sphere b)
+{
+    float r = (a.getR()+b.getR())*(a.getR()+b.getR());
+    return r <= distPointsSquared(a.getPos(),b.getPos());
+}
 
-///* Calculates the new vel and direction of the sphere 
-bool collision (Sphere &a, Sphere &b)
+/* Check if a sphere is colliding with a wall
+ */
+bool sphereWallColliding(Sphere a, Wall b)
+{
+    
+}
+
+/* Calculates the new vel and direction of the sphere */
+void collision (Sphere &a, Sphere &b)
 {
   /**
    * X = a.pos - b.pos;
@@ -76,7 +90,7 @@ bool collision (Sphere &a, Sphere &b)
   float final_yspeed_2 = n_yspeed_2;
   
   float fx_1,fx_2,fy_1,fy_2;
-  
+
   fx_1 = cos(collision_angle)*final_xspeed_1+cos(collision_angle+(PI/2))*final_yspeed_1;
   fy_1 = sin(collision_angle)*final_xspeed_1+sin(collision_angle+(PI/2))*final_yspeed_1;
 
@@ -86,5 +100,4 @@ bool collision (Sphere &a, Sphere &b)
   Vector3 v1(fx_1,fy_1,0), v2(fx_2,fy_2,0);
   a.setRap(v1.magnitude()),b.setRap(v2.magnitude());
   a.setVel(v1),b.setVel(v2);
-  return 1;
-  }
+}

@@ -1,7 +1,6 @@
 #ifndef SPHERE
 #define SPHERE
 #include "../math/Vector3.h"
-#include "../math/Utility.h"
 #include "GL/glut.h"
 
 /* Class Sphere
@@ -11,7 +10,7 @@ class Sphere
 {
  private:
   //Position and direction
-  Vector3 pos, dir,vel;
+  Vector3 pos,vel;
   //Velocity, mass and radius
   GLfloat  mass, r, rapidez;
   //Sphere materials
@@ -22,14 +21,12 @@ class Sphere
   Sphere(GLfloat r, Vector3 pos);
 
   Vector3 getPos(void);
-  Vector3 getDir(void);
   Vector3 getVel(void);
-
-  void setVel(Vector3);
-  void setRap(GLfloat);
-
-  GLfloat getMass(void);
+  void setVel(Vector3 v);
+  void setRap(GLfloat ra);
   GLfloat getRap(void);
+  GLfloat getMass(void);
+  GLfloat getR(void);
 
   void draw(void);
 };

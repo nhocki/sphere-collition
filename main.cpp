@@ -7,8 +7,6 @@
 #include <string>
 #include <sstream>
 
-#include "cstdio"
-
 using namespace std;
 
 //Keyboard
@@ -57,16 +55,14 @@ void mouseMotion(int x, int y)
     if(outside || x >= glutGet(GLUT_WINDOW_WIDTH)-2 || y >= glutGet(GLUT_WINDOW_HEIGHT)-2 | x <= 2 || y <= 2)
         lastx=x,lasty=y, outside=false;
     GLfloat deltax, deltay;
-    deltax = 1.5*(GLfloat)(x-lastx)/glutGet(GLUT_WINDOW_WIDTH);
-    deltay = 1.5*(GLfloat)(y-lasty)/glutGet(GLUT_WINDOW_WIDTH);
+    deltax = 1.3*(GLfloat)(x-lastx)/glutGet(GLUT_WINDOW_WIDTH);
+    deltay = 1.3*(GLfloat)(y-lasty)/glutGet(GLUT_WINDOW_WIDTH);
     
     camera.rotate(LEFT,deltax*10);
     camera.rotate(UP,deltay*10);
 
     lastx = x;
     lasty = y;
-
-    printf("%d %d %d %d\n", lastx, lasty,  glutGet(GLUT_WINDOW_WIDTH),  glutGet(GLUT_WINDOW_HEIGHT));
 }
 
 //Checks if the mouse leaves the window
@@ -84,16 +80,21 @@ void mouseEntry(int state)
  */
 void keyboard()
 {
-    if(keyN['w'])camera.move(UP, delta);
-    if(keyN['s'])camera.move(DOWN, delta);
-    if(keyN['a'])camera.move(LEFT, delta);
-    if(keyN['d'])camera.move(RIGHT, delta);
+    if(keyN['w'] || keyN['W'])camera.move(UP, delta);
+    if(keyN['s'] || keyN['S'])camera.move(DOWN, delta);
+    if(keyN['a'] || keyN['A'])camera.move(LEFT, delta);
+    if(keyN['d'] || keyN['D'])camera.move(RIGHT, delta);
+
+    if(keyN[27] || keyN['q'] || keyN['Q'])exit(0);
 }
 
 //Draw the simulation
 void draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    //Reposition the light
+    glLightfv(GL_LIGHT0, GL_POSITION, LP1);
     
     glutSolidSphere(0.5f, 30, 30);
 

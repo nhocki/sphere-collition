@@ -12,27 +12,36 @@ Sphere::Sphere(GLfloat r, Vector3 pos)
     Sphere::pos = pos;
 }
 
-Sphere::Vector3 getPos()
+Vector3 Sphere::getPos()
 {
   return pos;
 }
 
-Sphere::Vector3 getVel()
+Vector3 Sphere::getVel()
 {
   return vel;
 }
 
-Sphere::setVel(Vector3 v)
+GLfloat Sphere::getMass()
+{
+  return mass;
+}
+
+GLfloat Sphere::getRap()
+{
+  return rapidez;
+}
+
+GLfloat Sphere::getR()
+{
+  return r;
+}
+
+void Sphere::setVel(Vector3 v)
 {
   vel = v;
 }
-
-Sphere::setRap(GLfloat t)
+void Sphere::setRap(GLfloat ra)
 {
-  rapidez = t;
-}
-
-Sphere::getRap()
-{
-  return rapidez;
+  rapidez = ra;
 }

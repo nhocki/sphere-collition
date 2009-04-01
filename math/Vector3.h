@@ -1,8 +1,8 @@
 #ifndef VECTOR3
 #define VECTOR3
 
-#include <math.h>
 #include <iostream>
+#include <math.h>
 
 class Vector3
 {

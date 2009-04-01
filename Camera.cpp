@@ -31,9 +31,9 @@ void Camera::setUp()
     gluLookAt(pos[0],pos[1],pos[2], 
               pos[0]+r*dir[0],pos[1]+r*dir[1],pos[2]+r*dir[2],
               0.0f,1.0f,0.0f);
-
+/* DEBUG
     cout << "pos:"<< pos << endl << "dir:"<< dir << endl << "r:" << r << endl;
-    cout << "XY: " << angleXY << " XZ: " << angleXZ << endl;
+    cout << "XY: " << angleXY << " XZ: " << angleXZ << endl;*/
 }
 
 void Camera::move(Direction d, GLfloat delta)

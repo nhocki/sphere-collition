@@ -31,9 +31,10 @@ h2. Existing Git Repo?
   git push origin master
 
 h1. Para usar el Git
+
 git init
 git pull
---cambios a los archivos---
+  Cambios a los archivos
 git add .
 git commit -m 'Mensaje'
 git push

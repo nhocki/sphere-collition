@@ -5,6 +5,7 @@
 % Author: nhocki@gmail.com
 % Keywords: 
 h1. Para configurar el Git
+
 h2. Global setup:
 
   Download and install Git
@@ -44,7 +45,7 @@ git add .
 git commit -m 'Mensaje'
 
 git push
-
+	
 
 
 

@@ -1,5 +1,7 @@
 #include "Wall.h"
 #include <iostream>
+#include <math.h>
+
 using namespace std;
 Wall::Wall()
 {
@@ -35,12 +37,19 @@ Wall:: Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d
 void Wall::calculatePoints()
 {
     GLfloat dx = (max[0] - min[0])/5;
-    GLfloat dy = (max[1] - min[1])/3;
+    GLfloat dy = (max[1] - min[1])/5;
     GLfloat dz = (max[2] - min[2])/5;
 
-    for(int i = 0; i < 4; ++i)
+    for(int i = 0; i < 6; ++i)
+    {
         for(int j = 0; j < 6; ++j)
-            points[j + i*6] = Vector3(min[0] + j*dx, min[1] + i*dy, min[2] + j*dz);
+        {
+            if(dy!=0)
+                points[j + i*6] = Vector3(min[0] + j*dx, min[1] + i*dy, min[2] + j*dz);
+            else
+                 points[j + i*6] = Vector3(min[0] + j*dx, min[1] + i*dy, min[2] + i*dz);
+        }
+    }
 }
 
 /* Get the plane ecuation components
@@ -60,18 +69,18 @@ void Wall::draw()
     glPushMatrix();
         glBegin(GL_QUADS);
 
-        for(int i = 0; i < 3; ++i)
+        for(int i = 0; i < 5; ++i)
         {
             for(int j = 0; j < 5; ++j)
             {
                 int p1=j + i*6,p2=(j+1) + i*6,p3=(j+1)+(i+1)*6,p4=j+ (i+1)*6;
-                glNormal3f(a,b,c);
+                glNormal3f(fabs(a),fabs(b),fabs(c));
                 glVertex3f(points[p1][0], points[p1][1], points[p1][2]);
-                glNormal3f(a,b,c);
+                glNormal3f(fabs(a),fabs(b),fabs(c));
                 glVertex3f(points[p2][0], points[p2][1], points[p2][2]);
-                glNormal3f(a,b,c);
+                glNormal3f(fabs(a),fabs(b),fabs(c));
                 glVertex3f(points[p3][0], points[p3][1], points[p3][2]);
-                glNormal3f(a,b,c);
+                glNormal3f(fabs(a),fabs(b),fabs(c));
                 glVertex3f(points[p4][0], points[p4][1], points[p4][2]);
             }
         }

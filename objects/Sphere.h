@@ -21,7 +21,7 @@ class Sphere
   Sphere(GLfloat r, Vector3 pos);
   Sphere(GLfloat r, Vector3 pos, Vector3 vel);
 
-  void move(void);
+  void move(GLfloat delta, GLfloat time);
 
   Vector3 getPos(void);
   Vector3 getVel(void);

@@ -12,7 +12,7 @@ class Wall
 private:
     //Lower left corner and upper right corner, and the tesselation
     Vector3 min, max;
-    Vector3 points[24];
+    Vector3 points[36];
     //Wall materials
     GLfloat amb[4], spec[4];
     //Plane Ecuation

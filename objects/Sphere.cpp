@@ -32,9 +32,10 @@ Sphere::Sphere(GLfloat r, Vector3 pos, Vector3 vel)
 
 /* moVes the sphere
  */
-void Sphere::move()
+void Sphere::move(GLfloat delta, GLfloat g)
 {
-    pos += vel;
+    pos += vel*delta;
+    vel[1] -= g;
 }
 
 /*
@@ -72,6 +73,6 @@ void Sphere::draw()
 {
     glPushMatrix();
         glTranslatef(pos[0],pos[1],pos[2]);
-        glutSolidSphere(r, 30, 30);
+        glutSolidSphere(r, 40, 40);
     glPopMatrix();
 }

@@ -8,6 +8,9 @@
 #include <string>
 #include <sstream>
 
+//A super arbitrary aproximation of gravity
+const GLfloat GRAVITY = 0.00001;
+
 using namespace std;
 
 //Keyboard
@@ -134,22 +137,15 @@ void draw()
 //Updates the logic
 void update()
 {
-    //FPS calculation
+    
     currTime=glutGet(GLUT_ELAPSED_TIME);
-	if (currTime - lastTime > 1000) {
-        stringstream ss;
-        ss << "Sphere collition " << "FPS: " << fps*1000/(currTime-lastTime);
-        glutSetWindowTitle(ss.str().c_str());
-        lastTime = currTime;
-		fps = 0;
-     }
 
     //Checks the keyboard input
     keyboard();
 
     //Update the spheres positions, and then checks if they collide
     for(int i = 0; i < spheres.size(); ++i)
-        spheres[i].move();
+        spheres[i].move(1.0f, GRAVITY);
 
     //Check if any sphere is colliding
     /* Provisional method, doesn't take the mass into account
@@ -168,6 +164,14 @@ void update()
     //Draws the simulation
     draw();
     
+    //FPS calculation
+    if (currTime - lastTime > 1000) {
+        stringstream ss;
+        ss << "Sphere collition " << "FPS: " << fps*1000/(currTime-lastTime);
+        glutSetWindowTitle(ss.str().c_str());
+        lastTime = currTime;
+		fps = 0;
+     }
     fps++;
 }
 
@@ -202,9 +206,9 @@ void resize(int w, int h)
 void init()
 {
     //Add some spheres
-    spheres.push_back(Sphere(1.0f, Vector3(1.0f, 0.0f, 5.0f), Vector3(0.0f, 0.0f, -0.004f)));
-    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 0.0f, -5.0f), Vector3(0.0f, 0.0f, 0.004f)));
-    spheres.push_back(Sphere(1.0f, Vector3(5.0f, 0.0f, -5.0f), Vector3(0.002f, 0.0f, 0.002f)));
+    spheres.push_back(Sphere(1.0f, Vector3(1.0f, 8.0f, 5.0f), Vector3(0.0f, 0.0f, -0.004f)));
+    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 8.0f, -5.0f), Vector3(0.0f, 0.0f, 0.004f)));
+    spheres.push_back(Sphere(1.0f, Vector3(5.0f, 8.0f, -5.0f), Vector3(0.002f, 0.0f, 0.002f)));
 
     //Add some walls
     walls.push_back(Wall(Vector3(10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), -1.0f, 0.0f, 0.0f, 10.0f, true));
@@ -212,7 +216,7 @@ void init()
     walls.push_back(Wall(Vector3(-10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, -10.0f), 0.0f, 0.0f, 1.0f, 10.0f, true));
     walls.push_back(Wall(Vector3(10.0f, 0.0f, 10.0f), Vector3(-10.0f, 20.0f, 10.0f), 0.0f, 0.0f, -1.0f, 10.0f, true));
     
-    //walls.psuh_back(Wall())
+    walls.push_back(Wall(Vector3(-10.0f, 0.0f, 10.0f), Vector3(10.0f, 0.0f, -10.0f), 0.0f, 1.0f, 0.0f, 0.0f, true));
 }
 
 /*
@@ -228,6 +232,8 @@ void initGl()
 	glLightfv(GL_LIGHT0, GL_SPECULAR, LS1);
 	glLightfv(GL_LIGHT0, GL_POSITION, LP1);
 	glEnable(GL_LIGHT0);
+
+    glShadeModel (GL_SMOOTH);
 
 	glEnable(GL_CULL_FACE);
 	glDepthFunc(GL_LESS);

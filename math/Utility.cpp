@@ -47,15 +47,14 @@ bool sphereWallColliding(Sphere a, Wall b)
 
 /* 
    Calculates the new vel of the sphere
-   For now I use a trick
+   If the angle is 0 is full reflection, if is 90, there is none
+   So the dot product tells the angle beewteen the normal of the plane and
+   The velocity so I know how much to reflect.
  */
 void wallCollision(Sphere &s, Wall &w)
 {
-    Vector3 vel = s.getVel();
-    if(w.getA() != 0)
-        s.setVel(Vector3(-vel[0], -vel[1], vel[2]));
-    else if(w.getC() != 0)
-        s.setVel(Vector3(vel[0], -vel[1], -vel[2]));
+    Vector3 norm(w.getA(), w.getB(), w.getC()); 
+    s.setVel(s.getVel() - ((-norm)*s.getVel().dot(-norm))*2);
 }
 
 /* Calculates the new vel and direction of the sphere */
@@ -79,42 +78,48 @@ void collision(Sphere &a, Sphere &b)
    * m2 = s2.mass
    * **** Then we need the velocity vector ****
    */
-  float dx = a.getPos()[0] - b.getPos()[0],dy = a.getPos()[2] - b.getPos()[2];
+    /*NOT WORKING
+    float dx = a.getPos()[0] - b.getPos()[0],dy = a.getPos()[2] - b.getPos()[2];
   
-  float velx_1=a.getVel()[0],vely_1=a.getVel()[1];
-  float velx_2=b.getVel()[0],vely_2=b.getVel()[1];
-
-  float m_1 = a.getMass(), m_2 = b.getMass();
-
-  double collision_angle = atan2(dy,dx);
+    float velx_1=a.getVel()[0],vely_1=a.getVel()[1];
+    float velx_2=b.getVel()[0],vely_2=b.getVel()[1];
+    
+    float m_1 = a.getMass(), m_2 = b.getMass();
+    
+    double collision_angle = atan2(dy,dx);
   
-  float mag_1 = a.getRap(), mag_2=b.getRap();
-  double dir_1 = atan2(vely_1,velx_1);
-  double dir_2 = atan2(vely_2,velx_2);
-
-  float n_xspeed_1 = mag_1*cos(dir_1 - collision_angle);
-  float n_yspeed_1 = mag_1*sin(dir_1 - collision_angle);
-
-  float n_xspeed_2 = mag_2*cos(dir_2 - collision_angle);
-  float n_yspeed_2 = mag_2*sin(dir_2 - collision_angle);
-
-  float final_xspeed_1 = ((m_1-m_2)*n_xspeed_1 + (m_2+m_2)*n_xspeed_2)/(m_1+m_2);
-  float final_xspeed_2 = ((m_1+m_1)*n_xspeed_1+(m_2 - m_1)*n_xspeed_2)/(m_1+m_2);
-
-  float final_yspeed_1 = n_yspeed_1;
-  float final_yspeed_2 = n_yspeed_2;
-  
-  float fx_1,fx_2,fy_1,fy_2;
-
-  fx_1 = cos(collision_angle)*final_xspeed_1+cos(collision_angle+(PI/2))*final_yspeed_1;
-  fy_1 = sin(collision_angle)*final_xspeed_1+sin(collision_angle+(PI/2))*final_yspeed_1;
-
-  fx_2 = cos(collision_angle)*final_xspeed_2+cos(collision_angle+(PI/2))*final_yspeed_2;
-  fy_2 = sin(collision_angle)*final_xspeed_2+sin(collision_angle+(PI/2))*final_yspeed_2;
-
-  Vector3 v1(fx_1,0,fy_1), v2(fx_2,0,fy_2);
-  a.setRap(v1.magnitude()),b.setRap(v2.magnitude());
-  a.setVel(v1),b.setVel(v2);
-
-  //cout << v1 << " " << v2 << endl;
+    float mag_1 = a.getRap(), mag_2=b.getRap();
+    double dir_1 = atan2(vely_1,velx_1);
+    double dir_2 = atan2(vely_2,velx_2);
+    
+    float n_xspeed_1 = mag_1*cos(dir_1 - collision_angle);
+    float n_yspeed_1 = mag_1*sin(dir_1 - collision_angle);
+    
+    float n_xspeed_2 = mag_2*cos(dir_2 - collision_angle);
+    float n_yspeed_2 = mag_2*sin(dir_2 - collision_angle);
+    
+    float final_xspeed_1 = ((m_1-m_2)*n_xspeed_1 + (m_2+m_2)*n_xspeed_2)/(m_1+m_2);
+    float final_xspeed_2 = ((m_1+m_1)*n_xspeed_1+(m_2 - m_1)*n_xspeed_2)/(m_1+m_2);
+    
+    float final_yspeed_1 = n_yspeed_1;
+    float final_yspeed_2 = n_yspeed_2;
+    
+    float fx_1,fx_2,fy_1,fy_2;
+    
+    fx_1 = cos(collision_angle)*final_xspeed_1+cos(collision_angle+(PI/2))*final_yspeed_1;
+    fy_1 = sin(collision_angle)*final_xspeed_1+sin(collision_angle+(PI/2))*final_yspeed_1;
+    
+    fx_2 = cos(collision_angle)*final_xspeed_2+cos(collision_angle+(PI/2))*final_yspeed_2;
+    fy_2 = sin(collision_angle)*final_xspeed_2+sin(collision_angle+(PI/2))*final_yspeed_2;
+    
+    Vector3 v1(fx_1,0,fy_1), v2(fx_2,0,fy_2);
+    a.setRap(v1.magnitude()),b.setRap(v2.magnitude());
+    a.setVel(v1),b.setVel(v2);
+    
+    //cout << v1 << " " << v2 << endl;*/
+    
+//TEMPORAL MEHTOD
+    Vector3 disp = (a.getPos() - b.getPos()).normalize();
+    a.setVel(a.getVel() - (disp * a.getVel().dot(disp) * 2));
+    b.setVel(b.getVel() - (disp * b.getVel().dot(disp) * 2));
 }

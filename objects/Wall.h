@@ -10,17 +10,21 @@
 class Wall
 {
 private:
-    //Lower left corner and upper right corner, and thw two middle points
-    Vector3 min, max, pt1, pt2;
+    //Lower left corner and upper right corner, and the tesselation
+    Vector3 min, max;
+    Vector3 points[24];
     //Wall materials
     GLfloat amb[4], spec[4], diff[4];
     //Plane Ecuation
     GLfloat a,b,c,d;
+    //Tells if the wall should be draw solid, or as a wireframe
+    GLboolean wire;
     //Texture
     GLuint text;
 public:
     Wall(void);
-    Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d);
+    Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d, GLboolean wire);
+    void calculatePoints(void);
     Vector3 getMin(void);
     Vector3 getMax(void);
     GLfloat getA(void);
@@ -31,5 +35,6 @@ public:
     void setText(GLuint);
 
     void draw(void);
+    void drawWire();
 };
 #endif

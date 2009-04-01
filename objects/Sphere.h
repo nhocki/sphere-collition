@@ -12,22 +12,20 @@ class Sphere
   //Position and direction
   Vector3 pos,vel;
   //Velocity, mass and radius
-  GLfloat  mass, r, rapidez;
+  GLfloat  mass, r;
   //Sphere materials
   GLfloat amb[4], spec[4], diff[4];
 
  public:
   Sphere(void);
   Sphere(GLfloat r, Vector3 pos);
-  Sphere(GLfloat r, Vector3 pos, Vector3 vel, GLfloat rap);
+  Sphere(GLfloat r, Vector3 pos, Vector3 vel);
 
   void move(void);
 
   Vector3 getPos(void);
   Vector3 getVel(void);
   void setVel(Vector3 v);
-  void setRap(GLfloat ra);
-  GLfloat getRap(void);
   GLfloat getMass(void);
   GLfloat getR(void);
 

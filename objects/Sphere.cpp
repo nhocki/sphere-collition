@@ -7,15 +7,14 @@ Sphere::Sphere()
 
 Sphere::Sphere(GLfloat r, Vector3 pos)
 {
-    Sphere(r, pos, Vector3(0.0f, 0.0f, 1.0f), 1.0f);
+    Sphere(r, pos, Vector3(0.0f, 0.0f, 1.0f));
 }
 
-Sphere::Sphere(GLfloat r, Vector3 pos, Vector3 vel, GLfloat rap)
+Sphere::Sphere(GLfloat r, Vector3 pos, Vector3 vel)
 {
     Sphere::r = r;
     Sphere::pos = pos;
     Sphere::vel = vel;
-    Sphere::rapidez = rap;
     mass = 1.0f;
 }
 
@@ -23,7 +22,7 @@ Sphere::Sphere(GLfloat r, Vector3 pos, Vector3 vel, GLfloat rap)
  */
 void Sphere::move()
 {
-    pos += vel.normalize()*rapidez;
+    pos += vel;
 }
 
 /*
@@ -44,10 +43,6 @@ GLfloat Sphere::getMass()
     return mass;
 }
 
-GLfloat Sphere::getRap()
-{
-    return rapidez;
-}
 
 GLfloat Sphere::getR()
 {
@@ -57,10 +52,6 @@ GLfloat Sphere::getR()
 void Sphere::setVel(Vector3 v)
 {
     vel = v;
-}
-void Sphere::setRap(GLfloat ra)
-{
-    rapidez = ra;
 }
 
 /* Draws the sphere

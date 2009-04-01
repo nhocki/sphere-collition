@@ -2,10 +2,10 @@
 
 Wall::Wall()
 {
-    Wall(Vector3(0.0f, -20.0f, -20.0f), Vector3(0.0f, 20.0f, 20.0f), 1.0f, 0.0f, 0.0f, 0.0f);
+    Wall(Vector3(0.0f, -20.0f, -20.0f), Vector3(0.0f, 20.0f, 20.0f), 1.0f, 0.0f, 0.0f, 0.0f, false);
 }
 
-Wall:: Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d)
+Wall:: Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d, GLboolean wire)
 {
     Wall::min = min;
     Wall::max = max;
@@ -13,14 +13,22 @@ Wall:: Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d
     Wall::b = b;
     Wall::c = c;
     Wall::d = d;
+    Wall::wire = wire;
+}
 
-    //Calculates the other two points
-    if(min[0]==max[0])
-        pt1 = Vector3(min[0], max[1], min[2]), pt2 = Vector3(min[0], min[1], max[2]);
-    if(min[1]==max[1])
-        pt1 = Vector3(min[0], min[1], max[2]), pt2 = Vector3(max[0], min[1], min[2]);
-    if(min[2]==max[2])
-        pt1 = Vector3(min[0], max[1], min[2]), pt2 = Vector3(max[0], min[1], min[2]);
+void Wall::calculatePoints()
+{
+    GLfloat dx = min[0] - max[0];
+    GLfloat dy = min[1] - max[1];
+    GLfloat dz = min[2] - max[2];
+
+    for(int i = 0; i < 6; ++i)
+    {
+        for(int j = 0; j < 4; ++j)
+        {
+            
+        }
+    }
 }
 
 /* Get the plane ecuation components
@@ -37,10 +45,7 @@ void Wall::draw()
 {
     glPushMatrix();
         glBegin(GL_QUADS);
-        glVertex3f(min[0], min[1], min[2]);
-        glVertex3f(pt2[0], pt2[1], pt2[2]);
-        glVertex3f(max[0], max[1], max[2]);
-        glVertex3f(pt1[0], pt1[1], pt1[2]);
+
         glEnd();  
     glPopMatrix();
 }

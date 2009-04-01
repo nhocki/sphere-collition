@@ -17,6 +17,10 @@ bool keyS[21];
 GLint lastx,lasty;
 bool outside = true;
 
+//Example spheres
+Sphere sp1(1.0f, Vector3(0.0f, 0.0f, 5.0f), Vector3(0.0f, 0.0f, -1.0f), 1.0f);
+Sphere sp2(1.0f, Vector3(0.0f, 0.0f, -5.0f), Vector3(0.0f, 0.0f, 1.0f), 1.0f);
+
 //Camera
 Camera camera(Vector3(0.0,0.0,5.0), PI/2, -PI/2, 5.0);
 //Speed Variables
@@ -96,7 +100,7 @@ void draw()
     //Reposition the light
     glLightfv(GL_LIGHT0, GL_POSITION, LP1);
     
-    glutSolidSphere(0.5f, 30, 30);
+    /*glutSolidSphere(0.5f, 30, 30);
 
     glPushMatrix();
     glTranslatef(1.0f,0.0f,0.0f);
@@ -107,7 +111,10 @@ void draw()
     glTranslatef(0.0f,1.0f,0.0f);
     glutSolidSphere(0.5f,30,30);
     glPopMatrix();
+    */
 
+    sp1.draw();
+    sp2.draw();
     glutSwapBuffers();
 }
 
@@ -126,6 +133,15 @@ void update()
 
     //Checks the keyboard input
     keyboard();
+
+    //Update the spheres positions, and then checks if they collide
+    sp1.move();
+    sp2.move();
+    //Check if they are colliding
+    if(areColliding(sp1, sp2))
+    {
+        collision(sp1,sp2);
+    }
 
     //Draws the simulation
     draw();

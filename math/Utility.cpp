@@ -1,5 +1,6 @@
 #include "Utility.h"
-
+#include <iostream>
+using namespace std;
 /* Calculates the distance between two points
  */
 float distPoints(Vector3 v1, Vector3 v2)
@@ -33,18 +34,19 @@ float distPointPlane(float a, float b, float c, float d, Vector3 v)
 bool areColliding(Sphere a, Sphere b)
 {
     float r = (a.getR()+b.getR())*(a.getR()+b.getR());
-    return r <= distPointsSquared(a.getPos(),b.getPos());
+    return r >= distPointsSquared(a.getPos(),b.getPos());
 }
 
 /* Check if a sphere is colliding with a wall
  */
 bool sphereWallColliding(Sphere a, Wall b)
 {
-    
+    GLfloat r = a.getR();
+    return r >= distPointPlane(b.getA(), b.getB(), b.getC(), b.getD(), a.getPos());
 }
 
 /* Calculates the new vel and direction of the sphere */
-void collision (Sphere &a, Sphere &b)
+void collision(Sphere &a, Sphere &b)
 {
   /**
    * X = a.pos - b.pos;
@@ -64,7 +66,7 @@ void collision (Sphere &a, Sphere &b)
    * m2 = s2.mass
    * **** Then we need the velocity vector ****
    */
-  float dx = a.getPos()[0] - b.getPos()[0],dy = a.getPos()[1] - b.getPos()[1];
+  float dx = a.getPos()[0] - b.getPos()[0],dy = a.getPos()[2] - b.getPos()[2];
   
   float velx_1=a.getVel()[0],vely_1=a.getVel()[1];
   float velx_2=b.getVel()[0],vely_2=b.getVel()[1];
@@ -97,7 +99,9 @@ void collision (Sphere &a, Sphere &b)
   fx_2 = cos(collision_angle)*final_xspeed_2+cos(collision_angle+(PI/2))*final_yspeed_2;
   fy_2 = sin(collision_angle)*final_xspeed_2+sin(collision_angle+(PI/2))*final_yspeed_2;
 
-  Vector3 v1(fx_1,fy_1,0), v2(fx_2,fy_2,0);
+  Vector3 v1(fx_1,0,fy_1), v2(fx_2,0,fy_2);
   a.setRap(v1.magnitude()),b.setRap(v2.magnitude());
   a.setVel(v1),b.setVel(v2);
+
+  cout << v1 << " " << v2 << endl;
 }

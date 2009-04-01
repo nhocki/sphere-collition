@@ -19,6 +19,9 @@ class Sphere
  public:
   Sphere(void);
   Sphere(GLfloat r, Vector3 pos);
+  Sphere(GLfloat r, Vector3 pos, Vector3 vel, GLfloat rap);
+
+  void move(void);
 
   Vector3 getPos(void);
   Vector3 getVel(void);

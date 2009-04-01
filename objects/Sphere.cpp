@@ -23,7 +23,7 @@ Sphere::Sphere(GLfloat r, Vector3 pos, Vector3 vel, GLfloat rap)
  */
 void Sphere::move()
 {
-    pos += vel.normalize()*0.0002;
+    pos += vel.normalize()*rapidez;
 }
 
 /*

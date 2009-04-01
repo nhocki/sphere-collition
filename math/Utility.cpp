@@ -45,6 +45,19 @@ bool sphereWallColliding(Sphere a, Wall b)
     return r >= distPointPlane(b.getA(), b.getB(), b.getC(), b.getD(), a.getPos());
 }
 
+/* 
+   Calculates the new vel of the sphere
+   For now I use a trick
+ */
+void wallCollision(Sphere &s, Wall &w)
+{
+    Vector3 vel = s.getVel();
+    if(w.getA() != 0)
+        s.setVel(Vector3(-vel[0], -vel[1], vel[2]));
+    else if(w.getC() != 0)
+        s.setVel(Vector3(vel[0], -vel[1], -vel[2]));
+}
+
 /* Calculates the new vel and direction of the sphere */
 void collision(Sphere &a, Sphere &b)
 {
@@ -103,5 +116,5 @@ void collision(Sphere &a, Sphere &b)
   a.setRap(v1.magnitude()),b.setRap(v2.magnitude());
   a.setVel(v1),b.setVel(v2);
 
-  cout << v1 << " " << v2 << endl;
+  //cout << v1 << " " << v2 << endl;
 }

@@ -10,8 +10,8 @@
 class Wall
 {
 private:
-    //Lower left corner and upper right corner
-    Vector3 min, max;
+    //Lower left corner and upper right corner, and thw two middle points
+    Vector3 min, max, pt1, pt2;
     //Wall materials
     GLfloat amb[4], spec[4], diff[4];
     //Plane Ecuation
@@ -29,5 +29,7 @@ public:
     GLfloat getD(void);
     GLuint getText(void);
     void setText(GLuint);
+
+    void draw(void);
 };
 #endif

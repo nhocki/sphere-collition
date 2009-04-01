@@ -200,7 +200,6 @@ int main(int args, char *argv[])
     glutPassiveMotionFunc(mouseMotion);
     
     glutReshapeFunc(resize);
-    
     glutDisplayFunc(draw);
     glutIdleFunc(update);
 

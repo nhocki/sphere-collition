@@ -36,7 +36,7 @@ float delta = 0.005;
 GLfloat LA1[]= {0.3f, 0.3f, 0.3f, 1.0f };
 GLfloat LD1[]= {0.6f, 0.6f, 0.6f, 1.0f };
 GLfloat LS1[]= {1.0f, 1.0f, 1.0f, 1.0f };
-GLfloat LP1[]= {5.0f, 5.0f, 5.0f, 0.1f };
+GLfloat LP1[]= {5.0f, 5.0f, 0.0f, 1.0f };
 
 //FPS calculation variables
 GLint currTime, lastTime, fps;

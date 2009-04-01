@@ -14,7 +14,7 @@ class Sphere
   //Velocity, mass and radius
   GLfloat  mass, r;
   //Sphere materials
-  GLfloat amb[4], spec[4];
+  GLfloat amb[4], spec[4], shin[1];
 
  public:
   Sphere(void);

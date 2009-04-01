@@ -28,6 +28,9 @@ Sphere::Sphere(GLfloat r, Vector3 pos, Vector3 vel)
     spec[1] = 0.0f;
     spec[2] = 1.0f;
     spec[3] = 1.0f;
+
+    //Shinness
+    shin[0] = 4.0f;
 }
 
 /* moVes the sphere
@@ -71,8 +74,15 @@ void Sphere::setVel(Vector3 v)
  */
 void Sphere::draw()
 {
+    GLUquadric *quad = gluNewQuadric();
     glPushMatrix();
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, amb);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
+        glMaterialfv(GL_FRONT, GL_SHININESS, shin);
         glTranslatef(pos[0],pos[1],pos[2]);
-        glutSolidSphere(r, 40, 40);
+        //glutSolidSphere(r, 40, 40);
+        gluSphere(quad, r, 20, 20);
     glPopMatrix();
+
+    gluDeleteQuadric(quad);
 }

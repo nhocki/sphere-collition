@@ -28,8 +28,9 @@ float distPointPlane(float a, float b, float c, float d, Vector3 v)
   return (a*v[0] + b*v[1] + c*v[2] + d)/sqrt(a*a + b*b + c*c);
 }
 
-/* Calculates the new vel and direction of the sphere */
-void collision (Sphere &a, Sphere &b)
+/*
+///* Calculates the new vel and direction of the sphere 
+bool collision (Sphere &a, Sphere &b)
 {
   /**
    * X = a.pos - b.pos;
@@ -48,7 +49,7 @@ void collision (Sphere &a, Sphere &b)
    * v2y = v2-v2x
    * m2 = s2.mass
    * **** Then we need the velocity vector ****
-   */
+   *
   float dx = a.getPos()[0] - b.getPos()[0],dy = a.getPos()[1] - b.getPos()[1];
   
   float velx_1=a.getVel()[0],vely_1=a.getVel()[1];
@@ -75,7 +76,7 @@ void collision (Sphere &a, Sphere &b)
   float final_yspeed_2 = n_yspeed_2;
   
   float fx_1,fx_2,fy_1,fy_2;
-
+  
   fx_1 = cos(collision_angle)*final_xspeed_1+cos(collision_angle+(PI/2))*final_yspeed_1;
   fy_1 = sin(collision_angle)*final_xspeed_1+sin(collision_angle+(PI/2))*final_yspeed_1;
 
@@ -84,5 +85,6 @@ void collision (Sphere &a, Sphere &b)
 
   Vector3 v1(fx_1,fy_1,0), v2(fx_2,fy_2,0);
   a.setRap(v1.magnitude()),b.setRap(v2.magnitude());
-  a.setVel(v1),b.setVel(v2);c
-}
+  a.setVel(v1),b.setVel(v2);
+  return 1;
+  }*/

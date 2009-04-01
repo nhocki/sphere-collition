@@ -26,3 +26,13 @@ Sphere::setVel(Vector3 v)
 {
   vel = v;
 }
+
+Sphere::setRap(GLfloat t)
+{
+  rapidez = t;
+}
+
+Sphere::getRap()
+{
+  return rapidez;
+}

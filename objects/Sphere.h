@@ -24,10 +24,11 @@ class Sphere
   Vector3 getPos(void);
   Vector3 getDir(void);
   Vector3 getVel(void);
+
   void setVel(Vector3);
-  GLfloat getRap(void);
+
   GLfloat getMass(void);
-  GLfloat getR(void);
+  GLfloat getRap(void);
 
   void draw(void);
 };

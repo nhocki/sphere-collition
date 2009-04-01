@@ -1,3 +1,12 @@
-ejemplo.o: main.cpp
-	g++ -lglut main.cpp Camera.cpp math/Utility.cpp math/Vector3.cpp objects/Sphere.cpp objects/Wall.cpp -oejemplo
+CC = g++
+CFLAGS = -Wall
+PROG = ejemplo
+LIBS = -lglut
+
+SRCS = main.cpp Camera.cpp Loader.cpp math/Vector3.cpp math/Utility.cpp objects/Sphere.cpp objects/Wall.cpp
+
+all: $(PROG)
+
+$(PROG): $(SRCS)
+	$(CC) $(CFFLAGS) $(LIBS) $(SRCS) -o$(PROG)
 

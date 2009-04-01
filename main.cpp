@@ -3,6 +3,7 @@
 #include "objects/Sphere.h"
 #include "objects/Wall.h"
 #include "Camera.h"
+#include "Loader.h"
 #include "GL/glut.h"
 #include <vector>
 #include <string>
@@ -23,12 +24,15 @@ bool outside = true;
 
 //Example spheres
 vector<Sphere> spheres;
+//Sphere textures
+GLuint texts[8];
 
 //Example walls
 vector<Wall> walls;
 
 //Camera
-Camera camera(Vector3(0.0,0.0,5.0), PI/2, -PI/2, 5.0);
+Camera camera(Vector3(0.0,10.0,10.0), PI/2, -PI/2, 5.0);
+
 //Speed Variables
 GLfloat delta = 0.005f;
 GLfloat deltaBall = 0.001f;
@@ -222,6 +226,21 @@ void init()
     //Ceiling and floor
     walls.push_back(Wall(Vector3(-10.0f, 0.0f, 10.0f), Vector3(10.0f, 0.0f, -10.0f), 0.0f, 1.0f, 0.0f, 0.0f, true));
     walls.push_back(Wall(Vector3(-10.0f, 20.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), 0.0f, -1.0f, 0.0f, 20.0f, true));
+
+    //Load the textures
+    glGenTextures(8, texts);
+    glBindTexture(GL_TEXTURE_2D, texts[0]);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    // when texture area is small, bilinear filter the closest mipmap
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
+    // when texture area is large, bilinear filter the original
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // the texture wraps over at the edges (repeat)
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+
+    
 }
 
 /*

@@ -34,7 +34,14 @@ float distPointPlane(float a, float b, float c, float d, Vector3 v)
 bool areColliding(Sphere a, Sphere b)
 {
     float r = (a.getR()+b.getR())*(a.getR()+b.getR());
-    return r >= distPointsSquared(a.getPos(),b.getPos());
+    if (r >= distPointsSquared(a.getPos(),b.getPos()))
+    {
+        Vector3 netVel = a.getVel() - b.getVel();
+        Vector3 disp = a.getPos() - b.getPos();
+        return netVel.dot(disp) < 0;
+    }
+    else
+        return false;
 }
 
 /* Check if a sphere is colliding with a wall
@@ -42,7 +49,9 @@ bool areColliding(Sphere a, Sphere b)
 bool sphereWallColliding(Sphere a, Wall b)
 {
     GLfloat r = a.getR();
-    return r >= distPointPlane(b.getA(), b.getB(), b.getC(), b.getD(), a.getPos());
+    return r >= distPointPlane(b.getA(), b.getB(), b.getC(), b.getD(), a.getPos())
+        && a.getVel().dot(-Vector3(b.getA(), b.getB(), b.getC())) > 0;
+    //return r >= distPointPlane(b.getA(), b.getB(), b.getC(), b.getD(), a.getPos());
 }
 
 /* 

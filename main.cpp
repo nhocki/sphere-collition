@@ -25,6 +25,8 @@ bool outside = true;
 vector<Sphere> spheres;
 //Sphere textures
 GLuint texts[8];
+string texNames[8] = {"textures/bola1.bmp", "textures/bola2.bmp", "textures/bola3.bmp", "textures/bola4.bmp" 
+                     ,"textures/bola5.bmp", "textures/bola6.bmp", "textures/bola7.bmp", "textures/bola8.bmp"};
 
 //Example walls
 vector<Wall> walls;
@@ -222,7 +224,7 @@ void init()
     spheres.push_back(Sphere(1.0f, Vector3(0.0f, 8.0f, -5.0f), Vector3(0.0f, 0.0f, 4.0f)));
     spheres.push_back(Sphere(1.0f, Vector3(5.0f, 8.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f)));
     spheres.push_back(Sphere(1.0f, Vector3(0.0f, 15.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f)));
-     spheres.push_back(Sphere(1.0f, Vector3(5.0f, 15.0f, 0.0f), Vector3(1.0f, 1.0f, 2.0f)));
+    spheres.push_back(Sphere(1.0f, Vector3(5.0f, 15.0f, 0.0f), Vector3(1.0f, 1.0f, 2.0f)));
 
     //Add some walls
     walls.push_back(Wall(Vector3(10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), -1.0f, 0.0f, 0.0f, 10.0f, true));
@@ -236,17 +238,24 @@ void init()
 
     //Load the textures
     glGenTextures(8, texts);
-    glBindTexture(GL_TEXTURE_2D, texts[0]);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    // when texture area is small, bilinear filter the closest mipmap
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
-    // when texture area is large, bilinear filter the original
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    // the texture wraps over at the edges (repeat)
-    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    for(int i = 0; i < 8; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, texts[i]);
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        // when texture area is small, bilinear filter the closest mipmap
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
+        // when texture area is large, bilinear filter the original
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        
+        // the texture wraps over at the edges (repeat)
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
+        Image *image = loadBMP(texNames[i]);
+        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,image->width, image->height,
+                     0,GL_RGB,GL_UNSIGNED_BYTE,image->pixels);
+    }
     
 }
 

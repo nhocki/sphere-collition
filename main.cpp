@@ -10,7 +10,7 @@
 #include <sstream>
 
 //A super arbitrary aproximation of gravity
-const GLfloat GRAVITY = 0.0098;
+const GLfloat GRAVITY = 0.098;
 
 using namespace std;
 
@@ -211,11 +211,11 @@ void resize(int w, int h)
 void init()
 {
     //Add some spheres
-    spheres.push_back(Sphere(1.0f, Vector3(1.0f, 8.0f, 5.0f), Vector3(0.0f, 0.0f, -4.0f)));
-    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 8.0f, -5.0f), Vector3(0.0f, 0.0f, 4.0f)));
-    spheres.push_back(Sphere(1.0f, Vector3(5.0f, 8.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f)));
-    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 15.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f)));
-     spheres.push_back(Sphere(1.0f, Vector3(5.0f, 15.0f, 0.0f), Vector3(1.0f, 1.0f, 2.0f)));
+    spheres.push_back(Sphere(1.0f, Vector3(1.0f, 8.0f, 5.0f), Vector3(0.0f, 0.0f, -5.0f)));
+    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 8.0f, -5.0f), Vector3(0.0f, 0.0f, 7.0f)));
+    spheres.push_back(Sphere(1.0f, Vector3(5.0f, 8.0f, -5.0f), Vector3(2.0f, 0.0f, 5.0f)));
+    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 15.0f, -5.0f), Vector3(2.0f, 0.0f, 11.0f)));
+     spheres.push_back(Sphere(1.0f, Vector3(5.0f, 15.0f, 0.0f), Vector3(5.0f, 4.0f, 3.0f)));
 
     //Add some walls
     walls.push_back(Wall(Vector3(10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), -1.0f, 0.0f, 0.0f, 10.0f, true));

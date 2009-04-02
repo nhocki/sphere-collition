@@ -123,7 +123,7 @@ void keyboard()
         if(pointer)
             glutSetCursor(GLUT_CURSOR_NONE);
         else
-            glutSetCursor(GLUT_FULL_CROSSHAIR);
+            glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
     }
 
     /*//Camera rotation
@@ -305,6 +305,8 @@ void initGl()
 	glEnable(GL_CULL_FACE);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
+    //Disables the pointer, can be enable by pressing P
+    glutSetCursor(GLUT_CURSOR_NONE);
 }
 
 int main(int args, char *argv[])
@@ -328,8 +330,7 @@ int main(int args, char *argv[])
 
     //Mouse functions
     glutPassiveMotionFunc(mouseMotion);
-    //Disables the pointer, can be enable by pressing P
-    glutSetCursor(GLUT_CURSOR_NONE);
+    
     
     glutReshapeFunc(resize);
     glutDisplayFunc(draw);

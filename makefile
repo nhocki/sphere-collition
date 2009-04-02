@@ -5,8 +5,5 @@ LIBS = -lglut
 
 SRCS = main.cpp Camera.cpp Loader.cpp math/Vector3.cpp math/Utility.cpp objects/Sphere.cpp objects/Wall.cpp
 
-all: $(PROG)
-
-$(PROG): $(SRCS)
-	$(CC) $(CFFLAGS) $(LIBS) $(SRCS) -o$(PROG)
-
+all: $(SRCS)
+	 $(CC) $(CFLAGS) $(LIBS) $(SRCS) -o$(PROG)

@@ -171,3 +171,16 @@ Image* loadBMP(const char* filename) {
 	input.close();
 	return new Image(pixels2.release(), width, height);
 }
+
+int Image::getWidth()
+{
+    return width;
+}
+int Image::getHeight()
+{
+    return height;
+}
+char* Image::getPixels()
+{
+    return pixels;
+}

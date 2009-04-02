@@ -13,13 +13,16 @@ class Sphere
   Vector3 pos,vel;
   //Velocity, mass and radius
   GLfloat  mass, r;
-  //Sphere materials
-  GLfloat amb[4], spec[4], shin[1];
+  //texture
+  GLuint tex;
+  //Rotation
+  Vector3 rot;
+  GLfloat angle;
 
  public:
   Sphere(void);
   Sphere(GLfloat r, Vector3 pos);
-  Sphere(GLfloat r, Vector3 pos, Vector3 vel);
+  Sphere(GLfloat r, Vector3 pos, Vector3 vel, GLuint text);
 
   void move(GLfloat delta, GLfloat time);
 

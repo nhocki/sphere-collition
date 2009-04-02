@@ -7,30 +7,19 @@ Sphere::Sphere()
 
 Sphere::Sphere(GLfloat r, Vector3 pos)
 {
-    Sphere(r, pos, Vector3(0.0f, 0.0f, 1.0f));
+    Sphere(r, pos, Vector3(0.0f, 0.0f, 1.0f), 0);
 }
 
-Sphere::Sphere(GLfloat r, Vector3 pos, Vector3 vel)
+Sphere::Sphere(GLfloat r, Vector3 pos, Vector3 vel, GLuint tex)
 {
     Sphere::r = r;
     Sphere::pos = pos;
     Sphere::vel = vel;
+    Sphere::tex = tex;
     mass = 1.0f;
 
-    //Ambient
-    amb[0] = 0.0f;
-    amb[1] = 0.0f;
-    amb[2] = 0.7f;
-    amb[3] = 1.0f;
-
-    //Specular
-    spec[0] = 0.4f;
-    spec[1] = 0.4f;
-    spec[2] = 1.0f;
-    spec[3] = 1.0f;
-
-    //Shinness
-    shin[0] = 1.0f;
+    //Rotation
+    rot = Vector3(vel[0], 0.0f, -vel[2]);
 }
 
 /* moVes the sphere
@@ -39,6 +28,13 @@ void Sphere::move(GLfloat delta, GLfloat g)
 {
     pos += vel*delta;
     vel[1] -= g;
+    angle += 0.2;
+
+    //Calculates the new rotation
+    //is arbitrary, don know how to calculate the real one
+    rot[0] = vel[0];
+    rot[1] = 0.0f;
+    rot[2] = -vel[2];
 }
 
 /*
@@ -75,13 +71,17 @@ void Sphere::setVel(Vector3 v)
 void Sphere::draw()
 {
     GLUquadric *quad = gluNewQuadric();
+    gluQuadricTexture(quad, GL_TRUE);
+
     glPushMatrix();
-        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, amb);
-        glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
-        glMaterialfv(GL_FRONT, GL_SHININESS, shin);
+        //Enable Texture
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, tex);
         glTranslatef(pos[0],pos[1],pos[2]);
+        glRotatef(angle, rot[0],rot[1],rot[2]);
         //glutSolidSphere(r, 40, 40);
         gluSphere(quad, r, 20, 20);
+        glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
     gluDeleteQuadric(quad);

@@ -18,6 +18,7 @@ bool keyN[256];
 bool keyS[21];
 
 //Mouse
+GLboolean pointer = false;
 GLint lastx,lasty;
 bool outside = true;
 
@@ -68,11 +69,24 @@ void keySUp(int key, int x, int y)
 //Mouse functions
 void mouseMotion(int x, int y)
 {
-    if(outside || x >= glutGet(GLUT_WINDOW_WIDTH)-2 || y >= glutGet(GLUT_WINDOW_HEIGHT)-2 | x <= 2 || y <= 2)
+    int width = glutGet(GLUT_WINDOW_WIDTH);
+    int height = glutGet(GLUT_WINDOW_HEIGHT);
+
+    if(x >= width - 2)x = 3, outside = true;
+    if(x <= 2)x = width-3, outside = true;
+    if(y >= height - 2)y = 3, outside = true;
+    if(y <= 2)y = height-3, outside=true;
+    
+    if(outside)glutWarpPointer(x, y);
+    
+    if(outside || x >= width-2 || y >= height-2 | x <= 2 || y <= 2)
+    {
         lastx=x,lasty=y, outside=false;
+    }
+    
     GLfloat deltax, deltay;
-    deltax = 1.3*(GLfloat)(x-lastx)/glutGet(GLUT_WINDOW_WIDTH);
-    deltay = 1.3*(GLfloat)(y-lasty)/glutGet(GLUT_WINDOW_WIDTH);
+    deltax = 1.3*(GLfloat)(x-lastx)/width;
+    deltay = 1.3*(GLfloat)(y-lasty)/height;
     
     camera.rotate(LEFT,deltax*10);
     camera.rotate(UP,deltay*10);
@@ -101,6 +115,16 @@ void keyboard()
     if(keyN['s'] || keyN['S'])camera.move(DOWN, delta);
     if(keyN['a'] || keyN['A'])camera.move(LEFT, delta);
     if(keyN['d'] || keyN['D'])camera.move(RIGHT, delta);
+
+    //Enables the pointer
+    if(keyN['p']||keyN['P'])
+    {
+        pointer = !pointer;
+        if(pointer)
+            glutSetCursor(GLUT_CURSOR_NONE);
+        else
+            glutSetCursor(GLUT_FULL_CROSSHAIR);
+    }
 
     /*//Camera rotation
     if(keyS[GLUT_KEY_UP])camera.rotate(DOWN, delta/10);
@@ -304,6 +328,8 @@ int main(int args, char *argv[])
 
     //Mouse functions
     glutPassiveMotionFunc(mouseMotion);
+    //Disables the pointer, can be enable by pressing P
+    glutSetCursor(GLUT_CURSOR_NONE);
     
     glutReshapeFunc(resize);
     glutDisplayFunc(draw);

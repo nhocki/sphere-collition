@@ -1,4 +1,6 @@
 #include "Camera.h"
+#include <iostream>
+using namespace std;
 /* Contructors*/
 Camera::Camera()
 {

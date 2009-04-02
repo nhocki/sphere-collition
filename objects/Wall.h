@@ -1,8 +1,13 @@
 #ifndef WALL
 #define WALL
 #include "../math/Vector3.h"
-//#include "../math/Utility.h"
+#include <iostream>
+#include <math.h>
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
 #include "GL/glut.h"
+#endif
 
 /* Class Sphere
  *  Contains all the necesary info about the Walls

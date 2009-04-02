@@ -1,10 +1,21 @@
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#include <OpenGL/glu.h>
+#include <OpenGL/OpenGL.h>
+#include <OpenGL/gl.h>
+#else
+#include "GL/glut.h"
+#include "GL/gl.h"
+#include "GL/glu.h"
+#endif
+
 #include "math/Utility.h"
 #include "math/Vector3.h"
 #include "objects/Sphere.h"
 #include "objects/Wall.h"
 #include "Camera.h"
 #include "Loader.h"
-#include "GL/glut.h"
+
 #include <vector>
 #include <string>
 #include <sstream>
@@ -79,7 +90,7 @@ void mouseMotion(int x, int y)
     
     if(outside)glutWarpPointer(x, y);
     
-    if(outside || x >= width-2 || y >= height-2 | x <= 2 || y <= 2)
+    if(!pointer && (outside || x >= width-2 || y >= height-2 | x <= 2 || y <= 2))
     {
         lastx=x,lasty=y, outside=false;
     }
@@ -124,6 +135,7 @@ void keyboard()
             glutSetCursor(GLUT_CURSOR_NONE);
         else
             glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+		keyN['p']=keyN['P']=false;
     }
 
     /*//Camera rotation

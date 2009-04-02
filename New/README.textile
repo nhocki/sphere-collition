@@ -1,0 +1,63 @@
+h1. TODO List
+
+  TODO List goes here!
+
+  Edit README.textile to add tasks
+
+h1. Para configurar el Git
+
+h2. Global setup:
+
+  Download and install Git
+
+  git config --global user.name "Nicolas Hock Isaza"
+
+  git config --global user.email nhocki@gmail.com
+        
+
+h2. Next steps:
+
+  mkdir testrepo
+
+  cd testrepo
+
+  git init
+
+  touch README
+
+  git add README
+
+  git commit -m 'first commit'
+
+  git remote add origin git@github.com:nhocki/sphere-collition.git
+
+  git push origin master
+      
+
+h2. Existing Git Repo?
+
+  cd existing_git_repo
+
+  git remote add origin git@github.com:nhocki/sphere-collition.git
+
+  git push origin master
+
+h1. Para usar el Git
+
+git init
+
+git pull
+
+  Cambios a los archivos
+
+
+git add .
+
+git commit -m 'Mensaje'
+
+git push
+	
+
+
+
+

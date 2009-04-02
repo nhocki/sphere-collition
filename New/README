@@ -1,0 +1,18 @@
+###  README --- /home/hock/Sphere collition/
+
+## Copyright 2009 Nicolas Hock Isaza
+##
+## Author: nhocki@gmail.com
+## Keywords: 
+
+git init
+git pull
+--cambios a los archivos---
+git add .
+git commit -m 'Mensaje'
+git push
+
+
+
+
+

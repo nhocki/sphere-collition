@@ -9,10 +9,9 @@
 #include <string>
 #include <sstream>
 
-//A super arbitrary aproximation of gravity
-const GLfloat GRAVITY = 0.098;
-
 using namespace std;
+
+GLfloat gravity = 0.0098;
 
 //Keyboard
 bool keyN[256];
@@ -43,7 +42,7 @@ GLfloat LD1[]= {0.6f, 0.6f, 0.6f, 1.0f };
 GLfloat LS1[]= {1.0f, 1.0f, 1.0f, 1.0f };
 GLfloat LP1[]= {5.0f, 5.0f, 0.0f, 1.0f };
 
-//FPS calculation variables
+//FPS calculation variables, and speed control
 GLint currTime, lastTime, fps;
 
 //Keyboard functions
@@ -142,7 +141,6 @@ void draw()
 //Updates the logic
 void update()
 {
-    
     currTime=glutGet(GLUT_ELAPSED_TIME);
 
     //Checks the keyboard input
@@ -150,7 +148,7 @@ void update()
 
     //Update the spheres positions, and then checks if they collide
     for(int i = 0; i < spheres.size(); ++i)
-        spheres[i].move(deltaBall, GRAVITY);
+        spheres[i].move(deltaBall, gravity);
 
     //Check if any sphere is colliding
     /* Provisional method, doesn't take the mass into account
@@ -168,13 +166,22 @@ void update()
 
     //Draws the simulation
     draw();
-    
+
     //FPS calculation
     if (currTime - lastTime > 1000) {
         stringstream ss;
         ss << "Sphere collition " << "FPS: " << fps*1000/(currTime-lastTime);
         glutSetWindowTitle(ss.str().c_str());
-        lastTime = currTime;
+        lastTime = currTime;   
+
+        //Recalculates deltas
+        GLfloat dfps = (GLfloat)1/fps;
+        gravity = 2*9.8*dfps;
+        delta = 10*dfps;
+        deltaBall = 3*dfps;
+
+        //cout << gravity << "delta: "<< delta << "deltaBall: "<< deltaBall <<endl;
+        
 		fps = 0;
      }
     fps++;
@@ -211,11 +218,11 @@ void resize(int w, int h)
 void init()
 {
     //Add some spheres
-    spheres.push_back(Sphere(1.0f, Vector3(1.0f, 8.0f, 5.0f), Vector3(0.0f, 0.0f, -5.0f)));
-    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 8.0f, -5.0f), Vector3(0.0f, 0.0f, 7.0f)));
-    spheres.push_back(Sphere(1.0f, Vector3(5.0f, 8.0f, -5.0f), Vector3(2.0f, 0.0f, 5.0f)));
-    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 15.0f, -5.0f), Vector3(2.0f, 0.0f, 11.0f)));
-     spheres.push_back(Sphere(1.0f, Vector3(5.0f, 15.0f, 0.0f), Vector3(5.0f, 4.0f, 3.0f)));
+    spheres.push_back(Sphere(1.0f, Vector3(1.0f, 8.0f, 5.0f), Vector3(0.0f, 0.0f, -4.0f)));
+    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 8.0f, -5.0f), Vector3(0.0f, 0.0f, 4.0f)));
+    spheres.push_back(Sphere(1.0f, Vector3(5.0f, 8.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f)));
+    spheres.push_back(Sphere(1.0f, Vector3(0.0f, 15.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f)));
+     spheres.push_back(Sphere(1.0f, Vector3(5.0f, 15.0f, 0.0f), Vector3(1.0f, 1.0f, 2.0f)));
 
     //Add some walls
     walls.push_back(Wall(Vector3(10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), -1.0f, 0.0f, 0.0f, 10.0f, true));

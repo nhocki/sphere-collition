@@ -1,9 +1,8 @@
-%  README --- /home/hock/Sphere collition/
+h1. TODO List
 
-% Copyright 2009 Nicolas Hock Isaza
-%
-% Author: nhocki@gmail.com
-% Keywords: 
+  TODO List goes here!
+  Edit README.textile to add tasks
+
 h1. Para configurar el Git
 
 h2. Global setup:

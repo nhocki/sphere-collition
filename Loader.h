@@ -6,13 +6,14 @@
 
 //Represents an image
 class Image {
-private:
-    char* pixels;
-    int width;
-    int height;
-public:
-		Image(char* ps, int w, int h);
-		~Image();
+ private:
+  
+ public:
+  char* pixels;
+  int width;
+  int height;
+  Image(char* ps, int w, int h);
+  ~Image();
 };
 
 //Reads a bitmap image from file.

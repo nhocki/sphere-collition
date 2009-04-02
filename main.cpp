@@ -25,7 +25,7 @@ bool outside = true;
 vector<Sphere> spheres;
 //Sphere textures
 GLuint texts[8];
-string texNames[8] = {"textures/bola1.bmp", "textures/bola2.bmp", "textures/bola3.bmp", "textures/bola4.bmp" 
+const char* texNames[8] = {"textures/bola1.bmp", "textures/bola2.bmp", "textures/bola3.bmp", "textures/bola4.bmp" 
                      ,"textures/bola5.bmp", "textures/bola6.bmp", "textures/bola7.bmp", "textures/bola8.bmp"};
 
 //Example walls
@@ -252,6 +252,7 @@ void init()
         glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
         glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
+	//	const char * texN= texNames[i].c_str();
         Image *image = loadBMP(texNames[i]);
         glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,image->width, image->height,
                      0,GL_RGB,GL_UNSIGNED_BYTE,image->pixels);

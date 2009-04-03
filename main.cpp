@@ -64,6 +64,9 @@ GLfloat LP1[]= {5.0f, 5.0f, 0.0f, 1.0f };
 //FPS calculation variables, and speed control
 GLint currTime, lastTime, fps;
 
+//Declaration of a function
+void addSphere();
+
 //Keyboard functions
 void keyDown(unsigned char key, int x, int y)
 {
@@ -83,6 +86,16 @@ void keySUp(int key, int x, int y)
 }
 
 //Mouse functions
+
+//Checks if the mouse leaves the window
+void mousePressed(int button, int state, int x, int y)
+{
+    if(button == GLUT_LEFT_BUTTON)
+        if(state == GLUT_DOWN)
+            for(int i = 0; i < 10; ++i)
+                addSphere();
+}
+
 void mouseMotion(int x, int y)
 {
 	int width = glutGet(GLUT_WINDOW_WIDTH);
@@ -122,8 +135,6 @@ void mouseEntry(int state)
 	if(state == GLUT_ENTERED)
 		outside = false;
 }
-
-void addSphere();
 
 /* 
    Reads the keyboard state and updates
@@ -253,13 +264,13 @@ void addSphere()
 	
 	signo = pow(-1 , (rand()%2)+1); //Generates 1 or 2
 
-	x = signo*(rand()%11)/(rand()%11 + 1.0);
+	x = signo*(rand()%8)/(rand()%8 + 1.0);
 	signo = pow(-1 , (rand()%2)+1);
 
-	y = (rand()%11)/(rand()%11+1.0) + 2.0;
+	y = (rand()%8)/(rand()%8+1.0) + 7.0;
 	signo = pow(-1 , (rand()%2)+1);
 
-	z = signo*(rand()%11)/(rand()%11 + 1.0);
+	z = signo*(rand()%8)/(rand()%8 + 1.0);
 	signo = pow(-1 , (rand()%2)+1);
 
 	vx = signo*(rand()%4+1);
@@ -273,9 +284,7 @@ void addSphere()
 	GLint tex=rand()%8;
 
 	//cout <<"radio: "<< r <<"  " << x <<"   " << y <<"   " << z <<endl;
-	//	D(x),D(y),D(z);
-  
-	//RANDOMS
+	//D(x),D(y),D(z);
 
 	spheres.push_back(Sphere(r,Vector3(x,y,z),Vector3(vx,vy,vz),texts[tex]));
 }
@@ -343,7 +352,7 @@ void init()
 	spheres.push_back(Sphere(0.5f, Vector3(5.0f, 8.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f), texts[2]));
 	spheres.push_back(Sphere(0.5f, Vector3(0.0f, 15.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f), texts[3]));
 	spheres.push_back(Sphere(0.5f, Vector3(5.0f, 15.0f, 0.0f), Vector3(1.0f, 1.0f, 2.0f), texts[4]));
-	for(int i = 0; i < 10; ++i)  addSphere();
+	//for(int i = 0; i < 10; ++i)  addSphere();
 
 	//Add some walls
 	walls.push_back(Wall(Vector3(10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), -1.0f, 0.0f, 0.0f, 10.0f, true));
@@ -399,6 +408,7 @@ int main(int args, char *argv[])
 	glutSpecialUpFunc(keySUp);
 
 	//Mouse functions
+    glutMouseFunc(mousePressed);
 	glutPassiveMotionFunc(mouseMotion);
     
 	glutReshapeFunc(resize);

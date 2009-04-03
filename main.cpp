@@ -21,6 +21,7 @@
 #include <sstream>
 #include <iostream>
 #include <ctime>
+#include <cstdlib>
 
 #define D(x) cout <<"Line "<< __LINE__ <<"    "<<#x"  is  " << x << endl
 

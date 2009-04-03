@@ -24,6 +24,7 @@
 #include <cstdlib>
 
 #define D(x) cout <<"Line "<< __LINE__ <<"    "<<#x"  is  " << x << endl
+#define MAX 85
 
 using namespace std;
 
@@ -257,6 +258,7 @@ void update()
 
 void addSphere()
 {
+	if(spheres.size()>=MAX) return ;
 	GLfloat r, x, y, z, vx, vy, vz;
 	int signo;
 	

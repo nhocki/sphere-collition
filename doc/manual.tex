@@ -1,0 +1,119 @@
+\documentclass[10pt,letterpaper]{article}
+%\usepackage[latin1]{inputenc}
+%\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+%Español y tildes!
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{listings}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{hyperref}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\title{Manual De Usuario}
+\author{Nicolás Hock - Cristian Isaza - Alejandro Peláez}
+\date{\today}
+\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents
+%\lstlistoflistings
+\lstloadlanguages{C++}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Descripción de la práctica}
+\subsection{Información General}
+\mbox{} \\
+\mbox{La práctica pretende simular una colisión de esferas al interior de una caja. Las esferas} \\
+\subsection{Criba de Eratóstenes}
+\mbox{} \\
+\input{./src/teoria_numeros/criba}%.tex
+\subsection{Divisores de un número}
+Saca los divisores de un número en desorden. Complejidad O($\sqrt{n}$).
+Hasta 4294967295 (máximo \textit{unsigned long}) responde instantaneamente. Se puede
+forzar un poco más usando \textit{unsigned long long} pero más allá de $10^{12}$ empieza a
+responder muy lento.
+\mbox{} \\
+\mbox{} \\
+\input{./src/teoria_numeros/divisores}%.tex
+\subsection{Función $ \varphi $ de Euler}
+Si n es un número entero positivo, entonces $ \varphi $(n) se define como el número de enteros positivos menores o iguales a n y coprimos con n.
+\mbox{} \\
+\mbox{} \\
+$$ \varphi (n) = \left\{
+\begin{array}{c l}
+ n-1 & \mbox{Si n es primo}\\
+ \displaystyle n\prod_{p|n}\left(1-\frac{1}{p}\right) & \mbox{donde los p son los distintos primos que dividen a n.}\\
+\end{array}
+\right.
+$$
+\mbox{} \\
+\mbox{} \\
+\input{./src/teoria_numeros/phiEu}%.tex
+\subsection{Fibonacci}
+Calcula el fibonacci N en O(log n).
+\mbox{} \\
+\mbox{} \\
+\input{./src/teoria_numeros/fib}%.tex
+\subsection{GCD}
+Algoritmo de Euclides
+\mbox{} \\
+\mbox{} \\
+\input{./src/teoria_numeros/gcd}%.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Combinatoria}
+\subsection{Cuadro resumen}
+Fórmulas para combinaciones y permutaciones:
+\begin{center}
+\renewcommand{\arraystretch}{2} %Multiplica la altura de cada fila de la tabla por 2
+%Si quiero aumentar el tamaño de una fila en particular insertar \rule{0cm}{1cm} en esa fila.
+\begin{tabular}{| c | c | c |}
+\hline
+\textit{Tipo} & \textit{¿Se permite la repetición?} & \textit{Fórmula} \\ [1.5ex]
+\hline\hline
+
+$r$-permutaciones & No & $ \displaystyle\frac{n!}{(n-r)!} $ \\ [1.5ex]
+\hline
+$r$-combinaciones & No & $ \displaystyle\frac{n!}{r!(n-r)!} $ \\  [1.5ex]
+\hline
+$r$-permutaciones & Sí & $ \displaystyle n^{r} $ \\
+\hline
+$r$-combinaciones & Sí & $ \displaystyle\frac{(n+r-1)!}{r!(n-1)!} $ \\ [1.5ex]
+\hline
+\end{tabular}
+\renewcommand{\arraystretch}{1}
+\end{center}
+Tomado de \textit{Matemática discreta y sus aplicaciones}, Kenneth Rosen, 5${}^{\hbox{ta}}$ edición, McGraw-Hill, página 315.
+\subsection{Combinaciones, coeficientes binomiales, triángulo de Pascal}
+\emph{Complejidad:} $ O(n^2) $ \\
+$$ {n \choose k} = \left\{
+\begin{array}{c l}
+ 1 & k = 0\\
+ 1 & n = k\\
+ \displaystyle {n - 1 \choose k - 1} + {n - 1 \choose k} & \mbox{en otro caso}\\
+\end{array}
+\right.
+$$
+
+\input{./src/combinatoria/pascal_triangle}%.tex
+
+\bigskip 
+\textbf{Nota:} $ \displaystyle {n \choose k }  $ está indefinido en el código anterior si $ n > k$. ¡La tabla puede estar llena con cualquier basura del compilador!
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Grafos}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Programación Dinámica}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Geometría y Trigonometría}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Estructuras de Datos}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Otros}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Java}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{C++}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

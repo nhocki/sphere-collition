@@ -41,12 +41,12 @@ vector<Sphere> spheres;
 //Sphere textures
 GLuint texts[8];
 string texNames[8] = {"textures/bola1.bmp", "textures/bola2.bmp", "textures/bola3.bmp", "textures/bola4.bmp" 
-							 ,"textures/bola5.bmp", "textures/bola6.bmp", "textures/bola7.bmp", "textures/bola8.bmp"};
+					  ,"textures/bola5.bmp", "textures/bola6.bmp", "textures/bola7.bmp", "textures/bola8.bmp"};
 
 //Example walls
 vector<Wall> walls;
 
-//Camera
+y//Camera
 Camera camera(Vector3(0.0,10.0,10.0), PI/2, -PI/2, 5.0);
 
 //Speed Variables
@@ -301,7 +301,7 @@ void init()
 
 			//Builds the texture
 			gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image->getWidth(), image->getHeight(),
-									GL_RGB, GL_UNSIGNED_BYTE, image->getPixels());
+							  GL_RGB, GL_UNSIGNED_BYTE, image->getPixels());
 
 			delete image;
 		}

@@ -41,9 +41,10 @@ bool outside = true;
 //Example spheres
 vector<Sphere> spheres;
 //Sphere textures
-GLuint texts[8];
-string texNames[8] = {"textures/bola1.bmp", "textures/bola2.bmp", "textures/bola3.bmp", "textures/bola4.bmp" 
-							 ,"textures/bola5.bmp", "textures/bola6.bmp", "textures/bola7.bmp", "textures/bola8.bmp"};
+GLuint texts[10];
+string texNames[10] = {"textures/bola1.bmp", "textures/bola2.bmp", "textures/bola3.bmp", "textures/bola4.bmp" 
+                       ,"textures/bola5.bmp", "textures/bola6.bmp", "textures/bola7.bmp", "textures/bola8.bmp"
+                       ,"textures/names.bmp", "textures/instructions.bmp"};
 
 //Example walls
 vector<Wall> walls;
@@ -318,29 +319,29 @@ void resize(int w, int h)
 void init()
 {
 	//Load the textures
-	glGenTextures(8, texts);
+	glGenTextures(10, texts);
 	
-	for(int i = 0; i < 8; ++i)
-		{
-			glBindTexture(GL_TEXTURE_2D, texts[i]);
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			// when texture area is small, bilinear filter the closest mipmap
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
-			// when texture area is large, bilinear filter the original
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	for(int i = 0; i < 10; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, texts[i]);
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        // when texture area is small, bilinear filter the closest mipmap
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
+        // when texture area is large, bilinear filter the original
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         
-			// the texture wraps over at the edges (repeat)
-			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+        // the texture wraps over at the edges (repeat)
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+        
+        Image *image = loadBMP(texNames[i].c_str());
+        
+        //Builds the texture
+        gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image->getWidth(), image->getHeight(),
+                          GL_RGB, GL_UNSIGNED_BYTE, image->getPixels());
 
-			Image *image = loadBMP(texNames[i].c_str());
-
-			//Builds the texture
-			gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image->getWidth(), image->getHeight(),
-									GL_RGB, GL_UNSIGNED_BYTE, image->getPixels());
-
-			delete image;
-		}
+        delete image;
+    }
 
 	//Add some spheres
 	srand((unsigned)time(NULL)); //Starts the random int generator
@@ -353,14 +354,24 @@ void init()
 	//for(int i = 0; i < 10; ++i)  addSphere();
 
 	//Add some walls
-	walls.push_back(Wall(Vector3(10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), -1.0f, 0.0f, 0.0f, 10.0f, true));
-	walls.push_back(Wall(Vector3(-10.0f, 0.0f, 10.0f), Vector3(-10.0f, 20.0f, -10.0f), 1.0f, 0.0f, 0.0f, 10.0f, true));
-	walls.push_back(Wall(Vector3(-10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, -10.0f), 0.0f, 0.0f, 1.0f, 10.0f, true));
-	walls.push_back(Wall(Vector3(10.0f, 0.0f, 10.0f), Vector3(-10.0f, 20.0f, 10.0f), 0.0f, 0.0f, -1.0f, 10.0f, true));
+	walls.push_back(Wall(Vector3(10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), 
+                         -1.0f, 0.0f, 0.0f, 10.0f, true, texts[8]));
+
+	walls.push_back(Wall(Vector3(-10.0f, 0.0f, 10.0f), Vector3(-10.0f, 20.0f, -10.0f), 
+                         1.0f, 0.0f, 0.0f, 10.0f, true, texts[9]));
+
+	walls.push_back(Wall(Vector3(-10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, -10.0f), 
+                         0.0f, 0.0f, 1.0f, 10.0f, true, texts[8]));
+
+	walls.push_back(Wall(Vector3(10.0f, 0.0f, 10.0f), Vector3(-10.0f, 20.0f, 10.0f), 
+                         0.0f, 0.0f, -1.0f, 10.0f, true, texts[9]));
     
 	//Ceiling and floor
-	walls.push_back(Wall(Vector3(-10.0f, 0.0f, 10.0f), Vector3(10.0f, 0.0f, -10.0f), 0.0f, 1.0f, 0.0f, 0.0f, true));
-	walls.push_back(Wall(Vector3(-10.0f, 20.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), 0.0f, -1.0f, 0.0f, 20.0f, true));
+	walls.push_back(Wall(Vector3(-10.0f, 0.0f, 10.0f), Vector3(10.0f, 0.0f, -10.0f), 
+                         0.0f, 1.0f, 0.0f, 0.0f, true, texts[8]));
+
+	walls.push_back(Wall(Vector3(-10.0f, 20.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), 
+                         0.0f, -1.0f, 0.0f, 20.0f, true, texts[8]));
 }
 
 /*

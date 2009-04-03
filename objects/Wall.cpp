@@ -5,10 +5,10 @@
 using namespace std;
 Wall::Wall()
 {
-    Wall(Vector3(0.0f, -20.0f, -20.0f), Vector3(0.0f, 20.0f, 20.0f), 1.0f, 0.0f, 0.0f, 0.0f, false);
+    Wall(Vector3(0.0f, -20.0f, -20.0f), Vector3(0.0f, 20.0f, 20.0f), 1.0f, 0.0f, 0.0f, 0.0f, false, 0);
 }
 
-Wall:: Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d, GLboolean wire)
+Wall:: Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d, GLboolean wire, GLuint tex)
 {
     Wall::min = min;
     Wall::max = max;
@@ -17,6 +17,7 @@ Wall:: Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d
     Wall::c = c;
     Wall::d = d;
     Wall::wire = wire;
+    Wall::tex = tex;
 
     calculatePoints();
 
@@ -69,9 +70,13 @@ void Wall::draw()
     //If I want the wall to be drawn in wire frame, I call the glPolygonMode
     if(wire)glPolygonMode(GL_BACK, GL_LINE);
     glPushMatrix();
-        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, amb);
+    /*glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, amb);
         glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
-        glMaterialfv(GL_FRONT, GL_SHININESS, shin);
+        glMaterialfv(GL_FRONT, GL_SHININESS, shin);*/
+
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, tex);
+        
         glBegin(GL_QUADS);
 
         for(int i = 0; i < 5; ++i)
@@ -80,12 +85,19 @@ void Wall::draw()
             {
                 int p1=j + i*6,p2=(j+1) + i*6,p3=(j+1)+(i+1)*6,p4=j+ (i+1)*6;
                 glNormal3f(a,b,c);
+                glTexCoord2f((float)j/5, (float)i/5);
                 glVertex3f(points[p1][0], points[p1][1], points[p1][2]);
+
                 glNormal3f(a,b,c);
+                glTexCoord2f((float)(j+1)/5, (float)i/5);
                 glVertex3f(points[p2][0], points[p2][1], points[p2][2]);
+
                 glNormal3f(a,b,c);
+                glTexCoord2f((float)(j+1)/5, (float)(i+1)/5);
                 glVertex3f(points[p3][0], points[p3][1], points[p3][2]);
+
                 glNormal3f(a,b,c);
+                glTexCoord2f((float)j/5, (float)(i+1)/5);
                 glVertex3f(points[p4][0], points[p4][1], points[p4][2]);
             }
         }

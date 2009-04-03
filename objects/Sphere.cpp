@@ -18,6 +18,21 @@ Sphere::Sphere(GLfloat r, Vector3 pos, Vector3 vel, GLuint tex)
     Sphere::tex = tex;
     mass = 1.0f;
 
+    //Set the materials
+    //Ambient
+    amb[0] = 0.3f;
+    amb[1] = 0.3f;
+    amb[2] = 0.3f;
+    amb[3] = 1.0f;
+
+    //Specular
+    spec[0] = 0.6f;
+    spec[1] = 0.6f;
+    spec[2] = 0.6f;
+    spec[3] = 0.6f;
+
+    shin[0] = 2.0f;
+
     //Rotation
     rot = Vector3(vel[0], 0.0f, -vel[2]);
 }
@@ -75,8 +90,13 @@ void Sphere::draw()
 
     glPushMatrix();
         //Enable Texture
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, amb);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
+        glMaterialfv(GL_FRONT, GL_SHININESS, shin);
+        
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, tex);
+
         glTranslatef(pos[0],pos[1],pos[2]);
         glRotatef(angle, rot[0],rot[1],rot[2]);
         //glutSolidSphere(r, 40, 40);

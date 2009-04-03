@@ -17,6 +17,8 @@ class Sphere
   Vector3 pos,vel;
   //Velocity, mass and radius
   GLfloat  mass, r;
+  //Wall materials
+  GLfloat amb[4], spec[4], shin[1];
   //texture
   GLuint tex;
   //Rotation

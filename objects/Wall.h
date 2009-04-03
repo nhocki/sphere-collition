@@ -25,10 +25,10 @@ private:
     //Tells if the wall should be draw solid, or as a wireframe
     GLboolean wire;
     //Texture
-    GLuint text;
+    GLuint tex;
 public:
     Wall(void);
-    Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d, GLboolean wire);
+    Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d, GLboolean wire, GLuint tex);
     void calculatePoints(void);
     Vector3 getMin(void);
     Vector3 getMax(void);

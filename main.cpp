@@ -236,7 +236,9 @@ void update()
 	//FPS calculation
 	if (currTime - lastTime > 1000) {
 		stringstream ss;
+        int n = spheres.size();
 		ss << "Sphere collision " << "FPS: " << fps*1000/(currTime-lastTime);
+        ss << " Number of spheres: " << n << " Calculations: " << n*(n+1)/2 + 6*n;
 		glutSetWindowTitle(ss.str().c_str());
 		lastTime = currTime;   
 

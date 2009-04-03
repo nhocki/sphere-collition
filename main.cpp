@@ -255,7 +255,7 @@ void addSphere()
 	x = signo*(rand()%11)/(rand()%11 + 1.0);
 	signo = pow(-1 , (rand()%2)+1);
 
-	y = signo*(rand()%11)/(rand()%11+1.0);
+	y = (rand()%11)/(rand()%11+1.0) + 2.0;
 	signo = pow(-1 , (rand()%2)+1);
 
 	z = signo*(rand()%11)/(rand()%11 + 1.0);
@@ -269,7 +269,7 @@ void addSphere()
 
 	vz = signo*(rand()%4+1);
 	signo = pow(-1 , (rand()%2)+1);
-	GLint tex=rand()%8+1;
+	GLint tex=rand()%8;
 
 	cout <<"radio: "<< r <<"  " << x <<"   " << y <<"   " << z <<endl;
 	//	D(x),D(y),D(z);

@@ -181,12 +181,12 @@ void draw()
 	glPopMatrix();
 
 	//Draw the spheres
-	for(int i = 0; i < spheres.size(); ++i)
+	for(unsigned int i = 0; i < spheres.size(); ++i)
 		spheres[i].draw();
     
 	//Draw the walls
 	glDisable(GL_CULL_FACE);
-	for(int i = 0; i < walls.size(); ++i)
+	for(unsigned int i = 0; i < walls.size(); ++i)
 		walls[i].draw();
 	glEnable(GL_CULL_FACE);
 
@@ -202,20 +202,20 @@ void update()
 	keyboard();
 
 	//Update the spheres positions, and then checks if they collide
-	for(int i = 0; i < spheres.size(); ++i)
+	for(unsigned int i = 0; i < spheres.size(); ++i)
 		spheres[i].move(deltaBall, gravity);
 
 	//Check if any sphere is colliding
 	/* Provisional method, doesn't take the mass into account
 	 */
-	for(int i = 0; i < spheres.size(); ++i)
-		for(int j = i+1; j < spheres.size(); ++j)
+	for(unsigned int i = 0; i < spheres.size(); ++i)
+		for(unsigned int j = i+1; j < spheres.size(); ++j)
 			if(areColliding(spheres[i], spheres[j]))
 				collision(spheres[i], spheres[j]);
 
 	//Checks if the balls collide with the walls
-	for(int i = 0; i < spheres.size(); ++i)
-		for(int j = 0; j < walls.size(); ++j)
+	for(unsigned int i = 0; i < spheres.size(); ++i)
+		for(unsigned int j = 0; j < walls.size(); ++j)
 			if(sphereWallColliding(spheres[i], walls[j]))
 				wallCollision(spheres[i],walls[j]);
 
@@ -271,7 +271,7 @@ void addSphere()
 	signo = pow(-1 , (rand()%2)+1);
 	GLint tex=rand()%8;
 
-	cout <<"radio: "<< r <<"  " << x <<"   " << y <<"   " << z <<endl;
+	//cout <<"radio: "<< r <<"  " << x <<"   " << y <<"   " << z <<endl;
 	//	D(x),D(y),D(z);
   
 	//RANDOMS

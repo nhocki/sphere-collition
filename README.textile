@@ -1,6 +1,8 @@
 h1. TODO List
 
   TODO List goes here!
+  
+  Manual completo
 
   Edit README.textile to add tasks
 

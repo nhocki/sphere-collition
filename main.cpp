@@ -20,6 +20,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <ctime>
 
 #define D(x) cout <<"Line "<< __LINE__ <<"    "<<#x"  is  " << x << endl
 
@@ -120,6 +121,8 @@ void mouseEntry(int state)
 	if(state == GLUT_ENTERED)
 		outside = false;
 }
+
+void addSphere();
 
 /* 
    Reads the keyboard state and updates
@@ -239,12 +242,37 @@ void update()
 	fps++;
 }
 
-bool addSPhere()
+void addSphere()
 {
 	GLfloat r, x, y, z, vx, vy, vz;
 	int signo;
-	signo = pow(-1,rand())%2;
-	GLint tex;
+	
+	r = rand() / (RAND_MAX + 1.0); 
+	while(r<0.3) 	r = rand() / (RAND_MAX + 1.0); 
+	
+	signo = pow(-1 , (rand()%2)+1); //Generates 1 or 2
+
+	x = signo*(rand()%11)/(rand()%11 + 1.0);
+	signo = pow(-1 , (rand()%2)+1);
+
+	y = signo*(rand()%11)/(rand()%11+1.0);
+	signo = pow(-1 , (rand()%2)+1);
+
+	z = signo*(rand()%11)/(rand()%11 + 1.0);
+	signo = pow(-1 , (rand()%2)+1);
+
+	vx = signo*(rand()%4+1);
+	signo = pow(-1 , (rand()%2)+1);
+
+	vy = signo*(rand()%4+1);
+	signo = pow(-1 , (rand()%2)+1);
+
+	vz = signo*(rand()%4+1);
+	signo = pow(-1 , (rand()%2)+1);
+	GLint tex=rand()%8+1;
+
+	cout <<"radio: "<< r <<"  " << x <<"   " << y <<"   " << z <<endl;
+	//	D(x),D(y),D(z);
   
 	//RANDOMS
 
@@ -283,7 +311,7 @@ void init()
 {
 	//Load the textures
 	glGenTextures(8, texts);
-
+	
 	for(int i = 0; i < 8; ++i)
 		{
 			glBindTexture(GL_TEXTURE_2D, texts[i]);
@@ -307,13 +335,14 @@ void init()
 		}
 
 	//Add some spheres
-	spheres.push_back(Sphere(0.5f, Vector3(1.0f, 8.0f, 5.0f), Vector3(0.0f, 0.0f, -4.0f), texts[0]));
-	spheres.push_back(Sphere(0.5f, Vector3(0.0f, 8.0f, -5.0f), Vector3(0.0f, 0.0f, 4.0f), texts[1]));
+	srand((unsigned)time(NULL)); //Starts the random int generator
+
+	spheres.push_back(Sphere(0.5f, Vector3(1.0f, 8.0f, 5.0f), Vector3(0.0f, 0.0f, -1.5f), texts[0]));
+	spheres.push_back(Sphere(0.5f, Vector3(0.0f, 8.0f, -5.0f), Vector3(0.0f, 0.0f, 1.8f), texts[1]));
 	spheres.push_back(Sphere(0.5f, Vector3(5.0f, 8.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f), texts[2]));
 	spheres.push_back(Sphere(0.5f, Vector3(0.0f, 15.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f), texts[3]));
 	spheres.push_back(Sphere(0.5f, Vector3(5.0f, 15.0f, 0.0f), Vector3(1.0f, 1.0f, 2.0f), texts[4]));
-	/*for(int i = 0; i < 10; ++i)
-	  addSphere();*/
+	for(int i = 0; i < 10; ++i)  addSphere();
 
 	//Add some walls
 	walls.push_back(Wall(Vector3(10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), -1.0f, 0.0f, 0.0f, 10.0f, true));

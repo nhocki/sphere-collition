@@ -101,27 +101,25 @@ void mouseMotion(int x, int y)
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
-	if(x >= width - 2)x = 3, outside = true;
-	if(x <= 2)x = width-3, outside = true;
-	if(y >= height - 2)y = 3, outside = true;
-	if(y <= 2)y = height-3, outside=true;
+	if(x >= width - 10)x = 11, outside = true;
+	if(x <= 10)x = width-11, outside = true;
+	if(y >= height - 10)y = 11, outside = true;
+	if(y <= 10)y = height-11, outside=true;
 
 	if(!pointer && outside)glutWarpPointer(x, y);
     
 	if(outside || x >= width-2 || y >= height-2 | x <= 2 || y <= 2)
-		{
-			lastx=x,lasty=y, outside=false;
-		}
+        lastx=x,lasty=y, outside=false;
     
 	GLfloat deltax, deltay;
 	deltax = 1.3*(GLfloat)(x-lastx)/width;
 	deltay = 1.3*(GLfloat)(y-lasty)/height;
     
 	if(!pointer)
-		{
-			camera.rotate(LEFT,deltax*10);
-			camera.rotate(UP,deltay*10);
-		}
+    {
+        camera.rotate(LEFT,deltax*10);
+        camera.rotate(UP,deltay*10);
+    }
 
 	lastx = x;
 	lasty = y;
@@ -150,11 +148,11 @@ void keyboard()
 
 	//Creates random Spheres
 	if(keyN['c'] || keyN['C'])
-		{
-			for(int i = 0; i < 10; ++i)
-				addSphere();
-			keyN['c']=keyN['C']=false;
-		}
+    {
+        for(int i = 0; i < 10; ++i)
+            addSphere();
+        keyN['c']=keyN['C']=false;
+    }
 
 	//Enables the pointer
 	if(keyN['p']||keyN['P'])
@@ -386,6 +384,8 @@ void initGl()
 	glEnable(GL_DEPTH_TEST);
 	//Disables the pointer, can be enable by pressing P
 	glutSetCursor(GLUT_CURSOR_NONE);
+    //Position the mouse
+    glutWarpPointer(400, 300);
 }
 
 int main(int args, char *argv[])

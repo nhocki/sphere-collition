@@ -236,7 +236,7 @@ void update()
 	//FPS calculation
 	if (currTime - lastTime > 1000) {
 		stringstream ss;
-		ss << "Sphere collition " << "FPS: " << fps*1000/(currTime-lastTime);
+		ss << "Sphere collision " << "FPS: " << fps*1000/(currTime-lastTime);
 		glutSetWindowTitle(ss.str().c_str());
 		lastTime = currTime;   
 

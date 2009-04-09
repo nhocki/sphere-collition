@@ -1,3 +1,11 @@
+/*
+  Program that simulates the collision of a lot of spheres
+  using a fast algorithm.
+  Alejandro Pelaez
+  Nicolas Hock
+  Cristian Isaza
+ */
+
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #include <OpenGL/glu.h>

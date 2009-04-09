@@ -1,3 +1,10 @@
+/*
+  Class Octree.
+  A lot of this code was taken from:
+  http://www.videotutorialsrock.com/opengl_tutorial/collision_detection/text.php
+  Coded by: Bill Jacobs
+ */
+
 #ifndef OCTREE
 #define OCTREE
 #include <set>

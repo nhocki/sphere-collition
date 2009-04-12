@@ -5,10 +5,10 @@
 using namespace std;
 Wall::Wall()
 {
-    Wall(Vector3(0.0f, -20.0f, -20.0f), Vector3(0.0f, 20.0f, 20.0f), 1.0f, 0.0f, 0.0f, 0.0f, false, 0);
+    Wall(Vector3(0.0f, -20.0f, -20.0f), Vector3(0.0f, 20.0f, 20.0f), 1.0f, 0.0f, 0.0f, 0.0f, false, 0, 'x');
 }
 
-Wall:: Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d, GLboolean wire, GLuint tex)
+Wall:: Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d, GLboolean wire, GLuint tex, char coord)
 {
     Wall::min = min;
     Wall::max = max;
@@ -18,6 +18,7 @@ Wall:: Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d
     Wall::d = d;
     Wall::wire = wire;
     Wall::tex = tex;
+	Wall::coord = coord;
 
     calculatePoints();
 
@@ -61,6 +62,7 @@ GLfloat Wall::getA(void){return a;}
 GLfloat Wall::getB(void){return b;}
 GLfloat Wall::getC(void){return c;}
 GLfloat Wall::getD(void){return d;}
+char Wall::getCoord(void){return coord;}
 
 /*
   Draws the wall

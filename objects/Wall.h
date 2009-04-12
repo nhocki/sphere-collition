@@ -15,6 +15,8 @@
 class Wall
 {
 private:
+	//Relevant coord of the wall
+	char coord;
     //Lower left corner and upper right corner, and the tesselation
     Vector3 min, max;
     Vector3 points[36];
@@ -28,7 +30,7 @@ private:
     GLuint tex;
 public:
     Wall(void);
-    Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d, GLboolean wire, GLuint tex);
+    Wall(Vector3 min, Vector3 max, GLfloat a, GLfloat b, GLfloat c, GLfloat d, GLboolean wire, GLuint tex, char coord);
     void calculatePoints(void);
     Vector3 getMin(void);
     Vector3 getMax(void);
@@ -36,6 +38,7 @@ public:
     GLfloat getB(void);
     GLfloat getC(void);
     GLfloat getD(void);
+	char getCoord(void);
     GLuint getText(void);
     void setText(GLuint);
 

@@ -23,6 +23,7 @@
 #include "objects/Wall.h"
 #include "Camera.h"
 #include "Loader.h"
+#include "Octree.h"
 
 #include <vector>
 #include <string>
@@ -47,13 +48,19 @@ bool pointer = false;
 GLint lastx,lasty;
 bool outside = true;
 
-//Example spheres
+//Sphere list and octree
 vector<Sphere> spheres;
+Octree octree(Vector3(-15.0f, 0.0f, -15.0f), Vector3(15.0f, 30.0f, 15.0f), 0);
+//bolean that tells to use the octree or not
+bool octr = false;
+
 //Sphere textures
 GLuint texts[10];
-string texNames[10] = {"textures/bola1.bmp", "textures/bola2.bmp", "textures/bola3.bmp", "textures/bola4.bmp" 
-                       ,"textures/bola5.bmp", "textures/bola6.bmp", "textures/bola7.bmp", "textures/bola8.bmp"
-                       ,"textures/names.bmp", "textures/instructions.bmp"};
+
+string texNames[10] = {"textures/bola1.bmp","textures/bola2.bmp","textures/bola3.bmp"
+					   "textures/bola4.bmp","textures/bola5.bmp","textures/bola6.bmp"
+					   "textures/bola7.bmp","textures/bola8.bmp","textures/names.bmp",
+					   "textures/instructions.bmp"};
 
 //Example walls
 vector<Wall> walls;
@@ -117,8 +124,7 @@ void mouseMotion(int x, int y)
 	if(y <= 10)y = height-11, outside=true;
 
 	if(!pointer && outside)glutWarpPointer(x, y);
-    
-	if(outside || x >= width-2 || y >= height-2 | x <= 2 || y <= 2)
+	if(outside || x >= width-2 || y >= height-2 || x <= 2 || y <= 2)
         lastx=x,lasty=y, outside=false;
     
 	GLfloat deltax, deltay;
@@ -175,6 +181,10 @@ void keyboard()
 			keyN['p']=keyN['P']=false;
 		}
 
+	//Switch between octree or slow method
+	if(keyN['o'] || keyN['O'])
+		octr = !octr, keyN['o']=false, keyN['O']=false;
+
 	/*//Camera rotation
 	  if(keyS[GLUT_KEY_UP])camera.rotate(DOWN, delta/10);
 	  if(keyS[GLUT_KEY_DOWN])camera.rotate(UP, delta/10);
@@ -228,16 +238,32 @@ void update()
 	//Check if any sphere is colliding
 	/* Provisional method, doesn't take the mass into account
 	 */
-	for(unsigned int i = 0; i < spheres.size(); ++i)
-		for(unsigned int j = i+1; j < spheres.size(); ++j)
-			if(areColliding(spheres[i], spheres[j]))
-				collision(spheres[i], spheres[j]);
+	if(octr)
+	{
+		vector<SpherePair> sp;
+		octree.potentialSphereCollisions(sp);
+		for(unsigned int i = 0; i < sp.size(); ++i);
+			//collision(*sp[i].first, *sp[i].second);
+	}
+	else
+		for(unsigned int i = 0; i < spheres.size(); ++i)
+			for(unsigned int j = i+1; j < spheres.size(); ++j)
+				if(areColliding(spheres[i], spheres[j]))
+					collision(spheres[i], spheres[j]);
 
-	//Checks if the balls collide with the walls
-	for(unsigned int i = 0; i < spheres.size(); ++i)
-		for(unsigned int j = 0; j < walls.size(); ++j)
-			if(sphereWallColliding(spheres[i], walls[j]))
-				wallCollision(spheres[i],walls[j]);
+	if (octr)
+	{
+		vector<SphereWallPair> sw;
+		octree.potentialSphereWallCollisions(sw, walls);
+		for(unsigned int i = 0; i < sw.size(); ++i)
+			wallCollision(*sw[i].first, *sw[i].second);
+	}
+	else
+		//Checks if the balls collide with the walls
+		for(unsigned int i = 0; i < spheres.size(); ++i)
+			for(unsigned int j = 0; j < walls.size(); ++j)
+				if(sphereWallColliding(spheres[i], walls[j]))
+					wallCollision(spheres[i],walls[j]);
 
 	//Draws the simulation
 	draw();
@@ -248,12 +274,16 @@ void update()
         int n = spheres.size();
 		ss << "Sphere collision " << "FPS: " << fps*1000/(currTime-lastTime);
         ss << " Number of spheres: " << n << " Calculations: " << n*(n+1)/2 + 6*n;
+		if(octr)
+			ss << "Octree method";
+		else
+			ss << "Slow method";
 		glutSetWindowTitle(ss.str().c_str());
 		lastTime = currTime;   
 
 		//Recalculates deltas
 		GLfloat dfps = (GLfloat)1/fps;
-		gravity = 2.5*9.8*dfps;
+		gravity = 3.0*9.8*dfps;
 		delta = 10*dfps;
 		deltaBall = 2.5*dfps;
 
@@ -278,7 +308,7 @@ void addSphere()
 	x = signo*(rand()%8)/(rand()%8 + 1.0);
 	signo = pow(-1 , (rand()%2)+1);
 
-	y = (rand()%8)/(rand()%8+1.0) + 7.0;
+	y = (rand()%10)/(rand()%10+1.0) + 10.0;
 	signo = pow(-1 , (rand()%2)+1);
 
 	z = signo*(rand()%8)/(rand()%8 + 1.0);
@@ -298,6 +328,7 @@ void addSphere()
 	//D(x),D(y),D(z);
 
 	spheres.push_back(Sphere(r,Vector3(x,y,z),Vector3(vx,vy,vz),texts[tex]));
+	octree.add(&spheres.back());
 }
 
 /*
@@ -357,33 +388,27 @@ void init()
 
 	//Add some spheres
 	srand((unsigned)time(NULL)); //Starts the random int generator
-
-	spheres.push_back(Sphere(0.5f, Vector3(1.0f, 8.0f, 5.0f), Vector3(0.0f, 0.0f, -1.5f), texts[0]));
-	spheres.push_back(Sphere(0.5f, Vector3(0.0f, 8.0f, -5.0f), Vector3(0.0f, 0.0f, 1.8f), texts[1]));
-	spheres.push_back(Sphere(0.5f, Vector3(5.0f, 8.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f), texts[2]));
-	spheres.push_back(Sphere(0.5f, Vector3(0.0f, 15.0f, -5.0f), Vector3(2.0f, 0.0f, 2.0f), texts[3]));
-	spheres.push_back(Sphere(0.5f, Vector3(5.0f, 15.0f, 0.0f), Vector3(1.0f, 1.0f, 2.0f), texts[4]));
-	//for(int i = 0; i < 10; ++i)  addSphere();
+	for(int i = 0; i < 5; ++i)  addSphere();
 
 	//Add some walls
-	walls.push_back(Wall(Vector3(10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), 
-                         -1.0f, 0.0f, 0.0f, 10.0f, true, texts[8]));
+	walls.push_back(Wall(Vector3(15.0f, 0.0f, -15.0f), Vector3(15.0f, 30.0f, 15.0f),
+                         -1.0f, 0.0f, 0.0f, 15.0f, true, texts[8],'x'));
 
-	walls.push_back(Wall(Vector3(-10.0f, 0.0f, 10.0f), Vector3(-10.0f, 20.0f, -10.0f), 
-                         1.0f, 0.0f, 0.0f, 10.0f, true, texts[9]));
+	walls.push_back(Wall(Vector3(-15.0f, 0.0f, 15.0f), Vector3(-15.0f, 30.0f, -15.0f),
+                         1.0f, 0.0f, 0.0f, 15.0f, true, texts[9],'x'));
 
-	walls.push_back(Wall(Vector3(-10.0f, 0.0f, -10.0f), Vector3(10.0f, 20.0f, -10.0f), 
-                         0.0f, 0.0f, 1.0f, 10.0f, true, texts[8]));
+	walls.push_back(Wall(Vector3(-15.0f, 0.0f, -15.0f), Vector3(15.0f, 30.0f, -15.0f),
+                         0.0f, 0.0f, 1.0f, 15.0f, true, texts[8], 'z'));
 
-	walls.push_back(Wall(Vector3(10.0f, 0.0f, 10.0f), Vector3(-10.0f, 20.0f, 10.0f), 
-                         0.0f, 0.0f, -1.0f, 10.0f, true, texts[9]));
-    
+	walls.push_back(Wall(Vector3(15.0f, 0.0f, 15.0f), Vector3(-15.0f, 30.0f, 15.0f),
+                         0.0f, 0.0f, -1.0f, 15.0f, true, texts[9], 'z'));
+
 	//Ceiling and floor
-	walls.push_back(Wall(Vector3(-10.0f, 0.0f, 10.0f), Vector3(10.0f, 0.0f, -10.0f), 
-                         0.0f, 1.0f, 0.0f, 0.0f, true, texts[8]));
+	walls.push_back(Wall(Vector3(-15.0f, 0.0f, 15.0f), Vector3(15.0f, 0.0f, -15.0f),
+                         0.0f, 1.0f, 0.0f, 0.0f, true, texts[8], 'y'));
 
-	walls.push_back(Wall(Vector3(-10.0f, 20.0f, -10.0f), Vector3(10.0f, 20.0f, 10.0f), 
-                         0.0f, -1.0f, 0.0f, 20.0f, true, texts[8]));
+	walls.push_back(Wall(Vector3(-15.0f, 30.0f, -15.0f), Vector3(15.0f, 30.0f, 15.0f),
+                         0.0f, -1.0f, 0.0f, 30.0f, true, texts[8], 'y'));
 }
 
 /*

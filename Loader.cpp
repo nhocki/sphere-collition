@@ -110,7 +110,7 @@ Image* loadBMP(const char* filename) {
 	assert(!input.fail() || !"Could not find file");
 	char buffer[2];
 	input.read(buffer, 2);
-	assert(buffer[0] == 'B' && buffer[1] == 'M' || !"Not a bitmap file");
+	assert(buffer[0] == 'B' && (buffer[1] == 'M' || !"Not a bitmap file"));
 	input.ignore(8);
 	int dataOffset = readInt(input);
 	

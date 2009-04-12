@@ -8,33 +8,33 @@ void Octree::fileSphere(Sphere *s, Vector3 pos, bool add)
 	{
 		if(x == 0)
 		{
-			if(pos[0] - s->getR() > center[0])
+			if(pos[0] - s->getR() > mid[0])
 				continue;
 		}
-		else if (pos[0] + s->getR() < center[0])
+		else if (pos[0] + s->getR() < mid[0])
 			continue;
 
 		for(int y = 0; y < 2; y++)
 		{
 			if (y == 0)
 			{
-				if (pos[1] - s->getR() > center[1])
+				if (pos[1] - s->getR() > mid[1])
 					continue;
 			}
-			else if (pos[1] + s->getR() < center[1])
+			else if (pos[1] + s->getR() < mid[1])
 				continue;
 
 			for(int z = 0; z < 2; z++)
 			{
 				if (z == 0)
 				{
-					if (pos[2] - s->getR() > center[2])
+					if (pos[2] - s->getR() > mid[2])
 						continue;
 				}
-				else if (pos[2] + s->getR() < center[2])
+				else if (pos[2] + s->getR() < mid[2])
 					continue;
 
-				//Add or remove the ball
+				//Add or remove the sphere
 				if (add)
 					children[x][y][z]->add(s);
 				else
@@ -44,7 +44,7 @@ void Octree::fileSphere(Sphere *s, Vector3 pos, bool add)
 	}
 }
 
-//Creates children of this node, and moves the balls tho the children
+//Creates children of this node, and moves the spheres tho the children
 void Octree::haveChildren()
 {
 	for(int x = 0; x < 2; x++)
@@ -53,13 +53,13 @@ void Octree::haveChildren()
 		float maxX;
 		if (x == 0)
 		{
-			minX = corner1[0];
-			maxX = center[0];
+			minX = min[0];
+			maxX = mid[0];
 		}
 		else
 		{
-			minX = center[0];
-			maxX = corner2[0];
+			minX = mid[0];
+			maxX = max[0];
 		}
 
 		for(int y = 0; y < 2; y++)
@@ -68,13 +68,13 @@ void Octree::haveChildren()
 			float maxY;
 			if (y == 0)
 			{
-				minY = corner1[1];
-				maxY = center[1];
+				minY = min[1];
+				maxY = mid[1];
 			}
 			else
 			{
-				minY = center[1];
-				maxY = corner2[1];
+				minY = mid[1];
+				maxY = max[1];
 			}
 
 			for(int z = 0; z < 2; z++)
@@ -83,26 +83,26 @@ void Octree::haveChildren()
 				float maxZ;
 				if (z == 0)
 				{
-					minZ = corner1[2];
-					maxZ = center[2];
+					minZ = min[2];
+					maxZ = mid[2];
 				}
 				else
 				{
-					minZ = center[2];
-					maxZ = corner2[2];
+					minZ = mid[2];
+					maxZ = max[2];
 				}
 
-				children[x][y][z] = new Octree(Vec3f(minX, minY, minZ),
-											   Vec3f(maxX, maxY, maxZ),
+				children[x][y][z] = new Octree(Vector3(minX, minY, minZ),
+											   Vector3(maxX, maxY, maxZ),
 											   depth + 1);
 			}
 		}
 	}
-	//Remove all balls from "balls" and add them to the new children
-	for(set<Sphere*>::iterator it = spheres.begin(); it != balls.end();it++)
+	//Remove all spheres from "spheres" and add them to the new children
+	for(set<Sphere*>::iterator it = spheres.begin(); it != spheres.end();it++)
 	{
 		Sphere* s = *it;
-		fileBall(s, s->getPos(), true);
+		fileSphere(s, s->getPos(), true);
 	}
 	spheres.clear();
 
@@ -115,24 +115,24 @@ void Octree::collectSpheres(set<Sphere*> &ss) {
 		for(int x = 0; x < 2; x++) {
 			for(int y = 0; y < 2; y++) {
 				for(int z = 0; z < 2; z++) {
-					children[x][y][z]->collectSPheres(ss);
+					children[x][y][z]->collectSpheres(ss);
 				}
 			}
 		}
 	}
 	else {
-		for(set<Sphere*>::iterator it = spheress.begin(); it != spheres.end();
+		for(set<Sphere*>::iterator it = spheres.begin(); it != spheres.end();
 			it++) {
 			Sphere* s = *it;
-			bs.insert(s);
+			ss.insert(s);
 		}
 	}
 }
 
-//Destroys its children, and move the balls to this node.
+//Destroys its children, and move the spheres to this node.
 void Octree::destroyChildren() {
-	//Move all balls in descendants of this to the "balls" set
-	collectBalls(balls);
+	//Move all spheres in descendants of this to the "spheres" set
+	collectSpheres(spheres);
 
 	for(int x = 0; x < 2; x++)
 		for(int y = 0; y < 2; y++)
@@ -142,19 +142,19 @@ void Octree::destroyChildren() {
 	hasChildren = false;
 }
 
-//Removes the specified ball at the indicated position
-void Octree::remove(Ball* ball, Vec3f pos) {
-	numBalls--;
+//Removes the specified sphere at the indicated position
+void Octree::remove(Sphere* sphere, Vector3 pos) {
+	numSpheres--;
 
-	if (hasChildren && numBalls < MIN_BALLS_PER_OCTREE)
+	if (hasChildren && numSpheres < MIN_SPHERES_PER_OCTREE)
 		destroyChildren();
 	if (hasChildren)
-		fileBall(ball, pos, false);
+		fileSphere(sphere, pos, false);
 	else
-		balls.erase(ball);
+		spheres.erase(sphere);
 }
 
-/* Helper fuction for potentialBallWallCollision.Adds potential ball-wall
+/* Helper fuction for potentialSphereWallCollision.Adds potential sphere-wall
    collisions to ss, where w is the type of wall, coord is the relevant
    coordinate of the wall ('x', 'y', or 'z'), and dir is 0 if
    the wall is in the negative direction and 1 if it is in the positive
@@ -162,13 +162,18 @@ void Octree::remove(Ball* ball, Vec3f pos) {
    the coordinate, e.g. if w is WALL_TOP, the function assumes that
    this is in the far upward direction.
  */
-void Octree::potentialSphereWallCollisions(vector<SphereWallPair> &cs, Wall w, char coord, int dir)
+void Octree::potentialSphereWallCollisions(vector<SphereWallPair> &cs, Wall *w)
 {
+	int dir = 0;
+	char coord = w->getCoord();
+	if(coord == 'x')dir = (w->getA() > 0)?0:1;
+	if(coord == 'y')dir = (w->getB() > 0)?0:1;
+	if(coord == 'z')dir = (w->getC() > 0)?0:1;
 	if (hasChildren)
 	{
-		//Recursively call potentialBallWallCollisions on the correct
+		//Recursively call potentialSphereWallCollisions on the correct
 		//half of the children (e.g. if w is WALL_TOP, call it on
-		//children above centerY)
+		//children above midY)
 		for(int dir2 = 0; dir2 < 2; dir2++)
 		{
 			for(int dir3 = 0; dir3 < 2; dir3++)
@@ -186,18 +191,18 @@ void Octree::potentialSphereWallCollisions(vector<SphereWallPair> &cs, Wall w, c
 					child = children[dir2][dir3][dir];
 					break;
 				}
-				child->potentialSphereWallCollisions(cs, w, coord, dir);
+				child->potentialSphereWallCollisions(cs, w);
 			}
 		}
 	}
 	else {
-		//Add (ball, w) for all balls in this
+		//Add (sphere, w) for all spheres in this
 		for(set<Sphere*>::iterator it = spheres.begin(); it != spheres.end();it++)
 		{
-			Shpere* s = *it;
+			Sphere* s = *it;
 			SphereWallPair swp;
-			swp.sphere = s;
-			swp.wall = w;
+			swp.first = s;
+			swp.second = w;
 			cs.push_back(swp);
 		}
 	}
@@ -207,9 +212,9 @@ void Octree::potentialSphereWallCollisions(vector<SphereWallPair> &cs, Wall w, c
 //Constructs a new Octree.  c1 is (minX, minY, minZ), c2 is (maxX, maxY,
 //maxZ), and d is the depth, which starts at 1.
 Octree::Octree(Vector3 c1, Vector3 c2, int d) {
-	corner1 = c1;
-	corner2 = c2;
-	center = (c1 + c2) / 2;
+	min = c1;
+	max = c2;
+	mid = (c1 + c2) / 2;
 	depth = d;
 	numSpheres = 0;
 	hasChildren = false;
@@ -226,12 +231,12 @@ Octree::~Octree() {
 void Octree::add(Sphere* s) {
 	numSpheres++;
 	if (!hasChildren && depth < MAX_OCTREE_DEPTH &&
-		numSpheres > MAX_SHPERES_PER_OCTREE) {
+		numSpheres > MAX_SPHERES_PER_OCTREE) {
 		haveChildren();
 	}
 
 	if (hasChildren) {
-		fileSphere(s, s>getPos(), true);
+		fileSphere(s, s->getPos(), true);
 	}
 	else {
 		spheres.insert(s);
@@ -244,33 +249,33 @@ void Octree::remove(Sphere* s) {
 }
 
 //Changes the position of a shpere in this from oldPos to shpere->pos
-void Octree::shpereMoved(Sphere* s, Vector3 oldPos) {
+void Octree::sphereMoved(Sphere* s, Vector3 oldPos) {
 	remove(s, oldPos);
 	add(s);
 }
 
 //Adds potential shpere-shpere collisions to the specified set
-void Octree::potentialSphereSphereCollisions(vector<SpherePair> &collisions) {
+void Octree::potentialSphereCollisions(vector<SpherePair> &collisions) {
 	if (hasChildren)
 		for(int x = 0; x < 2; x++)
 			for(int y = 0; y < 2; y++)
 				for(int z = 0; z < 2; z++)
-					children[x][y][z]->potentialSphereSphereCollisions(collisions);
+					children[x][y][z]->potentialSphereCollisions(collisions);
 
 	else
 	{
 		//Add all pairs (shpere1, shpere2) from shperes
-		for(set<Sphere*>::iterator it = shperes.begin(); it != shperes.end();
+		for(set<Sphere*>::iterator it = spheres.begin(); it != spheres.end();
 			it++) {
 			Sphere* s1 = *it;
-			for(set<Sphere*>::iterator it2 = shperes.begin();
-				it2 != shperes.end(); it2++) {
+			for(set<Sphere*>::iterator it2 = spheres.begin();
+				it2 != spheres.end(); it2++) {
 				Sphere* s2 = *it2;
 				//This test makes sure that we only add each pair once
 				if (s1 < s2) {
 					SpherePair sp;
-					sp.s1 = s1;
-					sp.s2 = s2;
+					sp.first = s1;
+					sp.second = s2;
 					collisions.push_back(sp);
 				}
 			}
@@ -279,11 +284,7 @@ void Octree::potentialSphereSphereCollisions(vector<SpherePair> &collisions) {
 }
 
 //Adds potential shpere-wall collisions to the specified set
-void Octree::potentialSphereWallCollisions(vector<SphereWallPair> &collisions) {
-	potentialSphereWallCollisions(collisions, WALL_LEFT, 'x', 0);
-	potentialSphereWallCollisions(collisions, WALL_RIGHT, 'x', 1);
-	potentialSphereWallCollisions(collisions, WALL_BOTTOM, 'y', 0);
-	potentialSphereWallCollisions(collisions, WALL_TOP, 'y', 1);
-	potentialSphereWallCollisions(collisions, WALL_FAR, 'z', 0);
-	potentialSphereWallCollisions(collisions, WALL_NEAR, 'z', 1);
+void Octree::potentialSphereWallCollisions(vector<SphereWallPair> &collisions, vector<Wall>walls){
+	for(unsigned int i = 0; i < walls.size(); ++i)
+		potentialSphereWallCollisions(collisions, &walls[i]);
 }

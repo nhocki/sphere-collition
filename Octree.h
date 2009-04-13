@@ -56,7 +56,7 @@ public:
     void remove(Sphere *s);
     void sphereMoved(Sphere *s, Vector3 oldPos);
     void potentialSphereCollisions(vector<SpherePair> &cs);
-    void potentialSphereWallCollisions(vector<SphereWallPair> &cs, vector<Wall>walls);
+    void potentialSphereWallCollisions(vector<SphereWallPair> &cs, vector<Wall*>walls);
 };
 
 #endif

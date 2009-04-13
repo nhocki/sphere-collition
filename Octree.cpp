@@ -169,6 +169,8 @@ void Octree::potentialSphereWallCollisions(vector<SphereWallPair> &cs, Wall *w)
 	if(coord == 'x')dir = (w->getA() > 0)?0:1;
 	if(coord == 'y')dir = (w->getB() > 0)?0:1;
 	if(coord == 'z')dir = (w->getC() > 0)?0:1;
+
+	//cout << coord << << " " dir << endl;
 	if (hasChildren)
 	{
 		//Recursively call potentialSphereWallCollisions on the correct
@@ -284,7 +286,7 @@ void Octree::potentialSphereCollisions(vector<SpherePair> &collisions) {
 }
 
 //Adds potential shpere-wall collisions to the specified set
-void Octree::potentialSphereWallCollisions(vector<SphereWallPair> &collisions, vector<Wall>walls){
+void Octree::potentialSphereWallCollisions(vector<SphereWallPair> &cs, vector<Wall*>walls){
 	for(unsigned int i = 0; i < walls.size(); ++i)
-		potentialSphereWallCollisions(collisions, &walls[i]);
+		potentialSphereWallCollisions(cs, walls[i]);
 }

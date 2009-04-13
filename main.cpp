@@ -33,7 +33,7 @@
 #include <cstdlib>
 
 #define D(x) cout <<"Line "<< __LINE__ <<"    "<<#x"  is  " << x << endl
-#define MAX 85
+#define MAX 500
 
 using namespace std;
 
@@ -49,21 +49,24 @@ GLint lastx,lasty;
 bool outside = true;
 
 //Sphere list and octree
-vector<Sphere> spheres;
+vector<Sphere*> spheres;
 Octree octree(Vector3(-15.0f, 0.0f, -15.0f), Vector3(15.0f, 30.0f, 15.0f), 0);
 //bolean that tells to use the octree or not
 bool octr = false;
 
+//Quadric for the spheres
+GLUquadric *quad;
+
 //Sphere textures
 GLuint texts[10];
 
-string texNames[10] = {"textures/bola1.bmp","textures/bola2.bmp","textures/bola3.bmp"
-					   "textures/bola4.bmp","textures/bola5.bmp","textures/bola6.bmp"
+string texNames[10] = {"textures/bola1.bmp","textures/bola2.bmp","textures/bola3.bmp",
+					   "textures/bola4.bmp","textures/bola5.bmp","textures/bola6.bmp",
 					   "textures/bola7.bmp","textures/bola8.bmp","textures/names.bmp",
 					   "textures/instructions.bmp"};
 
 //Example walls
-vector<Wall> walls;
+vector<Wall*> walls;
 
 //Camera
 Camera camera(Vector3(0.0,10.0,10.0), PI/2, -PI/2, 5.0);
@@ -80,6 +83,8 @@ GLfloat LP1[]= {5.0f, 5.0f, 0.0f, 1.0f };
 
 //FPS calculation variables, and speed control
 GLint currTime, lastTime, fps;
+//Number of collition calculations
+GLint calc;
 
 //Declaration of a function
 void addSphere();
@@ -109,8 +114,14 @@ void mousePressed(int button, int state, int x, int y)
 {
     if(button == GLUT_LEFT_BUTTON)
         if(state == GLUT_DOWN)
-            for(int i = 0; i < 10; ++i)
+            for(int i = 0; i < 5; ++i)
                 addSphere();
+
+	if(button == GLUT_RIGHT_BUTTON)
+        if(state == GLUT_DOWN)
+			if(spheres.size() > 0)
+				for(int i = 0; i < 5; ++i)
+					octree.remove(spheres.back()), spheres.erase(spheres.end()-1);
 }
 
 void mouseMotion(int x, int y)
@@ -212,12 +223,18 @@ void draw()
 
 	//Draw the spheres
 	for(unsigned int i = 0; i < spheres.size(); ++i)
-		spheres[i].draw();
-    
+	{
+		spheres[i]->draw();
+		Vector3 pos = spheres[i]->getPos();
+		/*glBegin(GL_LINES);
+		glVertex3f(pos[0], pos[1], pos[2]);
+		glVertex3f(0,15,0);
+		glEnd();*/
+    }
 	//Draw the walls
 	glDisable(GL_CULL_FACE);
 	for(unsigned int i = 0; i < walls.size(); ++i)
-		walls[i].draw();
+		walls[i]->draw();
 	glEnable(GL_CULL_FACE);
 
 	glutSwapBuffers();
@@ -233,21 +250,24 @@ void update()
 
 	//Update the spheres positions, and then checks if they collide
 	for(unsigned int i = 0; i < spheres.size(); ++i)
-		spheres[i].move(deltaBall, gravity);
+	{
+		Vector3 oldPos = spheres[i]->getPos();
+		spheres[i]->move(deltaBall, gravity);
+		octree.sphereMoved(spheres[i], oldPos);
+	}
 
-	//Check if any sphere is colliding
-	/* Provisional method, doesn't take the mass into account
-	 */
+	//Spheres collitions
 	if(octr)
 	{
 		vector<SpherePair> sp;
 		octree.potentialSphereCollisions(sp);
-		for(unsigned int i = 0; i < sp.size(); ++i);
-			//collision(*sp[i].first, *sp[i].second);
+		for(unsigned int i = 0; i < sp.size(); ++i, calc++)
+			if(areColliding(sp[i].first, sp[i].second))
+				collision(sp[i].first, sp[i].second);
 	}
 	else
 		for(unsigned int i = 0; i < spheres.size(); ++i)
-			for(unsigned int j = i+1; j < spheres.size(); ++j)
+			for(unsigned int j = i+1; j < spheres.size(); ++j, calc++)
 				if(areColliding(spheres[i], spheres[j]))
 					collision(spheres[i], spheres[j]);
 
@@ -256,12 +276,13 @@ void update()
 		vector<SphereWallPair> sw;
 		octree.potentialSphereWallCollisions(sw, walls);
 		for(unsigned int i = 0; i < sw.size(); ++i)
-			wallCollision(*sw[i].first, *sw[i].second);
+			if(sphereWallColliding(sw[i].first, sw[i].second))
+				wallCollision(sw[i].first, sw[i].second);
 	}
 	else
 		//Checks if the balls collide with the walls
 		for(unsigned int i = 0; i < spheres.size(); ++i)
-			for(unsigned int j = 0; j < walls.size(); ++j)
+			for(unsigned int j = 0; j < walls.size(); ++j, calc++)
 				if(sphereWallColliding(spheres[i], walls[j]))
 					wallCollision(spheres[i],walls[j]);
 
@@ -273,11 +294,11 @@ void update()
 		stringstream ss;
         int n = spheres.size();
 		ss << "Sphere collision " << "FPS: " << fps*1000/(currTime-lastTime);
-        ss << " Number of spheres: " << n << " Calculations: " << n*(n+1)/2 + 6*n;
+        ss << " Number of spheres: " << n << " Calculations: " << calc;
 		if(octr)
-			ss << "Octree method";
+			ss << " Octree method";
 		else
-			ss << "Slow method";
+			ss << " Slow method";
 		glutSetWindowTitle(ss.str().c_str());
 		lastTime = currTime;   
 
@@ -292,6 +313,7 @@ void update()
 		fps = 0;
 	}
 	fps++;
+	calc = 0;
 }
 
 void addSphere()
@@ -300,35 +322,34 @@ void addSphere()
 	GLfloat r, x, y, z, vx, vy, vz;
 	int signo;
 	
-	r = rand() / (RAND_MAX + 1.0); 
-	while(r<0.3) 	r = rand() / (RAND_MAX + 1.0); 
-	
-	signo = pow(-1 , (rand()%2)+1); //Generates 1 or 2
+	r = (rand()/ (RAND_MAX + 1.0))/2.75 + 0.3;
 
-	x = signo*(rand()%8)/(rand()%8 + 1.0);
-	signo = pow(-1 , (rand()%2)+1);
+	signo = pow(-1.0, (rand()%2)+1); //Generates 1 or 2
+	x = signo*(rand()%12)/(rand()%12 + 1.0);
 
-	y = (rand()%10)/(rand()%10+1.0) + 10.0;
-	signo = pow(-1 , (rand()%2)+1);
+	y = (rand()%15)/(rand()%15+1.0) + 10.0;
 
-	z = signo*(rand()%8)/(rand()%8 + 1.0);
-	signo = pow(-1 , (rand()%2)+1);
+	signo = pow(-1.0, (rand()%2)+1);
+	z = signo*(rand()%12)/(rand()%12 + 1.0);
 
-	vx = signo*(rand()%4+1);
-	signo = pow(-1 , (rand()%2)+1);
+	signo = pow(-1.0, (rand()%2)+1);
+	vx = signo*(rand()%2+1);
 
-	vy = signo*(rand()%4+1);
-	signo = pow(-1 , (rand()%2)+1);
+	signo = pow(-1.0, (rand()%2)+1);
+	vy = signo*(rand()%2+1);
 
-	vz = signo*(rand()%4+1);
-	signo = pow(-1 , (rand()%2)+1);
+	signo = pow(-1.0, (rand()%2)+1);
+	vz = signo*(rand()%2+1);
+
 	GLint tex=rand()%8;
 
-	//cout <<"radio: "<< r <<"  " << x <<"   " << y <<"   " << z <<endl;
-	//D(x),D(y),D(z);
+	Vector3 pos(x,y,z), vel(vx,vy,vz);
 
-	spheres.push_back(Sphere(r,Vector3(x,y,z),Vector3(vx,vy,vz),texts[tex]));
-	octree.add(&spheres.back());
+	//cout << "r: "<< r << " pos: " << pos << " vel: " << vel << " tex: "<< texNames[tex] << endl;
+
+	Sphere *s = new Sphere(r,pos,vel,texts[tex], quad);
+	spheres.push_back(s);
+	octree.add(s);
 }
 
 /*
@@ -388,27 +409,33 @@ void init()
 
 	//Add some spheres
 	srand((unsigned)time(NULL)); //Starts the random int generator
-	for(int i = 0; i < 5; ++i)  addSphere();
 
 	//Add some walls
-	walls.push_back(Wall(Vector3(15.0f, 0.0f, -15.0f), Vector3(15.0f, 30.0f, 15.0f),
+	walls.push_back(new Wall(Vector3(15.0f, 0.0f, -15.0f), Vector3(15.0f, 30.0f, 15.0f),
                          -1.0f, 0.0f, 0.0f, 15.0f, true, texts[8],'x'));
 
-	walls.push_back(Wall(Vector3(-15.0f, 0.0f, 15.0f), Vector3(-15.0f, 30.0f, -15.0f),
+	walls.push_back(new Wall(Vector3(-15.0f, 0.0f, 15.0f), Vector3(-15.0f, 30.0f, -15.0f),
                          1.0f, 0.0f, 0.0f, 15.0f, true, texts[9],'x'));
 
-	walls.push_back(Wall(Vector3(-15.0f, 0.0f, -15.0f), Vector3(15.0f, 30.0f, -15.0f),
+	walls.push_back(new Wall(Vector3(-15.0f, 0.0f, -15.0f), Vector3(15.0f, 30.0f, -15.0f),
                          0.0f, 0.0f, 1.0f, 15.0f, true, texts[8], 'z'));
 
-	walls.push_back(Wall(Vector3(15.0f, 0.0f, 15.0f), Vector3(-15.0f, 30.0f, 15.0f),
+	walls.push_back(new Wall(Vector3(15.0f, 0.0f, 15.0f), Vector3(-15.0f, 30.0f, 15.0f),
                          0.0f, 0.0f, -1.0f, 15.0f, true, texts[9], 'z'));
 
 	//Ceiling and floor
-	walls.push_back(Wall(Vector3(-15.0f, 0.0f, 15.0f), Vector3(15.0f, 0.0f, -15.0f),
+	walls.push_back(new Wall(Vector3(-15.0f, 0.0f, 15.0f), Vector3(15.0f, 0.0f, -15.0f),
                          0.0f, 1.0f, 0.0f, 0.0f, true, texts[8], 'y'));
 
-	walls.push_back(Wall(Vector3(-15.0f, 30.0f, -15.0f), Vector3(15.0f, 30.0f, 15.0f),
+	walls.push_back(new Wall(Vector3(-15.0f, 30.0f, -15.0f), Vector3(15.0f, 30.0f, 15.0f),
                          0.0f, -1.0f, 0.0f, 30.0f, true, texts[8], 'y'));
+
+	//Creates the quadric for the balls
+	quad = gluNewQuadric();
+	gluQuadricTexture(quad, GL_TRUE);
+
+	//Adds some spheres
+	//addSphere();
 }
 
 /*

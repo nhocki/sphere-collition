@@ -31,13 +31,13 @@ float distPointPlane(float a, float b, float c, float d, Vector3 v)
 
 /* Checks if two spheres are colliding
  */
-bool areColliding(Sphere a, Sphere b)
+bool areColliding(Sphere *a, Sphere *b)
 {
-    float r = (a.getR()+b.getR())*(a.getR()+b.getR());
-    if (r >= distPointsSquared(a.getPos(),b.getPos()))
+    float r = (a->getR()+b->getR())*(a->getR()+b->getR());
+    if (r >= distPointsSquared(a->getPos(),b->getPos()))
     {
-        Vector3 netVel = a.getVel() - b.getVel();
-        Vector3 disp = a.getPos() - b.getPos();
+        Vector3 netVel = a->getVel() - b->getVel();
+        Vector3 disp = a->getPos() - b->getPos();
         return netVel.dot(disp) < 0;
     }
     else
@@ -46,11 +46,11 @@ bool areColliding(Sphere a, Sphere b)
 
 /* Check if a sphere is colliding with a wall
  */
-bool sphereWallColliding(Sphere a, Wall b)
+bool sphereWallColliding(Sphere *a, Wall *b)
 {
-    GLfloat r = a.getR();
-    return r >= distPointPlane(b.getA(), b.getB(), b.getC(), b.getD(), a.getPos())
-        && a.getVel().dot(-Vector3(b.getA(), b.getB(), b.getC())) > 0;
+    GLfloat r = a->getR();
+    return r >= distPointPlane(b->getA(), b->getB(), b->getC(), b->getD(), a->getPos())
+        && a->getVel().dot(-Vector3(b->getA(), b->getB(), b->getC())) > 0;
     //return r >= distPointPlane(b.getA(), b.getB(), b.getC(), b.getD(), a.getPos());
 }
 
@@ -60,14 +60,14 @@ bool sphereWallColliding(Sphere a, Wall b)
    So the dot product tells the angle beewteen the normal of the plane and
    The velocity so I know how much to reflect.
  */
-void wallCollision(Sphere &s, Wall &w)
+void wallCollision(Sphere *s, Wall *w)
 {
-    Vector3 norm(w.getA(), w.getB(), w.getC());
-    s.setVel(s.getVel() - ((-norm)*s.getVel().dot(-norm))*2);
+    Vector3 norm(w->getA(), w->getB(), w->getC());
+    s->setVel(s->getVel() - ((-norm)*s->getVel().dot(-norm))*2);
 }
 
 /* Calculates the new vel and direction of the sphere */
-void collision(Sphere &a, Sphere &b)
+void collision(Sphere *a, Sphere *b)
 {
   /**
    * X = a.pos - b.pos;
@@ -128,7 +128,7 @@ void collision(Sphere &a, Sphere &b)
     //cout << v1 << " " << v2 << endl;*/
     
 //TEMPORAL MEHTOD
-    Vector3 disp = (a.getPos() - b.getPos()).normalize();
-    a.setVel(a.getVel() - (disp * a.getVel().dot(disp) * 2));
-    b.setVel(b.getVel() - (disp * b.getVel().dot(disp) * 2));
+    Vector3 disp = (a->getPos() - b->getPos()).normalize();
+    a->setVel(a->getVel() - (disp * a->getVel().dot(disp) * 2));
+    b->setVel(b->getVel() - (disp * b->getVel().dot(disp) * 2));
 }

@@ -25,10 +25,13 @@ class Sphere
   Vector3 rot;
   GLfloat angle;
 
+  //Quadric
+  GLUquadric *quad;
+
  public:
   Sphere(void);
   Sphere(GLfloat r, Vector3 pos);
-  Sphere(GLfloat r, Vector3 pos, Vector3 vel, GLuint text);
+  Sphere(GLfloat r, Vector3 pos, Vector3 vel, GLuint text, GLUquadric *quad);
 
   void move(GLfloat delta, GLfloat time);
 

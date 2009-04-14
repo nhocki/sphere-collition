@@ -7,6 +7,7 @@
 #include "GL/glut.h"
 #endif
 
+const double pi = acos(0.0);
 /* Class Sphere
  *  Contains all the necesary info about the spheres
  */

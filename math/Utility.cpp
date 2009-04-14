@@ -60,15 +60,17 @@ bool sphereWallColliding(Sphere *a, Wall *b)
    So the dot product tells the angle beewteen the normal of the plane and
    The velocity so I know how much to reflect.
  */
-void wallCollision(Sphere *s, Wall *w)
+void wallCollision(Sphere *s, Wall *w, bool lose=false)
 {
+	double delta = (lose)?0.95:0.992;
     Vector3 norm(w->getA(), w->getB(), w->getC());
-    s->setVel(s->getVel() - ((-norm)*s->getVel().dot(-norm))*2);
+    s->setVel((s->getVel() - ((-norm)*s->getVel().dot(-norm))*2)*delta);
 }
 
 /* Calculates the new vel and direction of the sphere */
-void collision(Sphere *a, Sphere *b)
+void collision(Sphere *a, Sphere *b, bool lose=false)
 {
+	double delta = (lose)?0.95:0.992;
   /**
    * X = a.pos - b.pos;
    * X.normalize();
@@ -129,6 +131,7 @@ void collision(Sphere *a, Sphere *b)
     
 //TEMPORAL MEHTOD
     Vector3 disp = (a->getPos() - b->getPos()).normalize();
-    a->setVel(a->getVel() - (disp * a->getVel().dot(disp) * 2));
-    b->setVel(b->getVel() - (disp * b->getVel().dot(disp) * 2));
+    a->setVel(a->getVel() - (disp * a->getVel().dot(disp) * 2)*delta);
+    b->setVel(b->getVel() - (disp * b->getVel().dot(disp) * 2)*delta);
+
 }

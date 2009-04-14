@@ -81,7 +81,10 @@ GLfloat Sphere::getR()
 
 void Sphere::setVel(Vector3 v)
 {
-    vel = v;
+	if(v.magnitude() > 0.002)
+		vel = v;
+	else
+		vel = Vector3(0.0, 0.0, 0.0);
 }
 
 /* Draws the sphere

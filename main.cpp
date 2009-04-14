@@ -24,6 +24,7 @@
 #include "Camera.h"
 #include "Loader.h"
 #include "Octree.h"
+#include "Timer.h"
 
 #include <vector>
 #include <string>
@@ -85,6 +86,11 @@ GLfloat LP1[]= {5.0f, 5.0f, 0.0f, 1.0f };
 GLint currTime, lastTime, fps;
 //Number of collition calculations
 GLint calc;
+//Timer
+Timer timer;
+
+//Toggles between elastic and inellastic collisions
+bool inellastic = false;
 
 //Declaration of a function
 void addSphere();
@@ -181,6 +187,10 @@ void keyboard()
         keyN['c']=keyN['C']=false;
     }
 
+	//Switch between ellastic and inellastic collisions
+	if(keyN['i'] || keyN['I'])
+		inellastic = !inellastic, keyN['i']=false, keyN['I']=false;
+
 	//Enables the pointer
 	if(keyN['p']||keyN['P'])
 		{
@@ -243,7 +253,16 @@ void draw()
 //Updates the logic
 void update()
 {
-	currTime=glutGet(GLUT_ELAPSED_TIME);
+	double prevTime = currTime;
+	currTime = timer.getElapsedTime();
+
+	double deltaTime = currTime - prevTime;
+
+	GLfloat dfps = (GLfloat)deltaTime/1000000;
+	gravity = 4.0*9.8*dfps;
+	delta = 10*dfps;
+	deltaBall = 2.5*dfps;
+
 
 	//Checks the keyboard input
 	keyboard();
@@ -263,37 +282,38 @@ void update()
 		octree.potentialSphereCollisions(sp);
 		for(unsigned int i = 0; i < sp.size(); ++i, calc++)
 			if(areColliding(sp[i].first, sp[i].second))
-				collision(sp[i].first, sp[i].second);
+				collision(sp[i].first, sp[i].second, inellastic);
 	}
 	else
 		for(unsigned int i = 0; i < spheres.size(); ++i)
 			for(unsigned int j = i+1; j < spheres.size(); ++j, calc++)
 				if(areColliding(spheres[i], spheres[j]))
-					collision(spheres[i], spheres[j]);
+					collision(spheres[i], spheres[j], inellastic);
 
 	if (octr)
 	{
 		vector<SphereWallPair> sw;
 		octree.potentialSphereWallCollisions(sw, walls);
-		for(unsigned int i = 0; i < sw.size(); ++i)
+		for(unsigned int i = 0; i < sw.size(); ++i, calc++)
 			if(sphereWallColliding(sw[i].first, sw[i].second))
-				wallCollision(sw[i].first, sw[i].second);
+				wallCollision(sw[i].first, sw[i].second, inellastic);
 	}
 	else
 		//Checks if the balls collide with the walls
 		for(unsigned int i = 0; i < spheres.size(); ++i)
 			for(unsigned int j = 0; j < walls.size(); ++j, calc++)
 				if(sphereWallColliding(spheres[i], walls[j]))
-					wallCollision(spheres[i],walls[j]);
+					wallCollision(spheres[i],walls[j], inellastic);
 
 	//Draws the simulation
 	draw();
 
 	//FPS calculation
-	if (currTime - lastTime > 1000) {
+	//Happens every 1/5 of a second, more precision but flickier
+	if (currTime - lastTime > 1000000/5) {
 		stringstream ss;
         int n = spheres.size();
-		ss << "Sphere collision " << "FPS: " << fps*1000/(currTime-lastTime);
+		ss << "Sphere collision " << "FPS: " << (double)fps*1000000/(currTime-lastTime);
         ss << " Number of spheres: " << n << " Calculations: " << calc;
 		if(octr)
 			ss << " Octree method";
@@ -303,10 +323,10 @@ void update()
 		lastTime = currTime;   
 
 		//Recalculates deltas
-		GLfloat dfps = (GLfloat)1/fps;
+		/*GLfloat dfps = (GLfloat)1/(fps*5);
 		gravity = 3.0*9.8*dfps;
 		delta = 10*dfps;
-		deltaBall = 2.5*dfps;
+		deltaBall = 2.5*dfps;*/
 
 		//cout << gravity << "delta: "<< delta << "deltaBall: "<< deltaBall <<endl;
         
@@ -436,6 +456,14 @@ void init()
 
 	//Adds some spheres
 	//addSphere();
+
+	//Starts the timer
+	timer.start();
+
+	//Initializes the FPS counter
+	lastTime = timer.getElapsedTime();
+	currTime = timer.getElapsedTime();
+	fps = 0;
 }
 
 /*
@@ -470,11 +498,6 @@ int main(int args, char *argv[])
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(800,600);
 	glutCreateWindow("Sphere collision");
-    
-	//Initializes the FPS counter
-	currTime = glutGet(GLUT_ELAPSED_TIME);
-	lastTime = glutGet(GLUT_ELAPSED_TIME);
-	fps = 0;
     
 	//Keyboard Functions
 	glutKeyboardFunc(keyDown);
